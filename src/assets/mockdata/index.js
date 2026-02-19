@@ -1,6 +1,7 @@
 // Re-export all mock data tables for backward compatibility (import from "../assets/mockdata")
 export { clubs } from "./clubs";
 export { students } from "./students";
+export { teachers } from "./teachers";
 export { users } from "./users";
 export { clubMembers } from "./clubMembers";
 export { clubAllowedEngineerClasses } from "./clubAllowedEngineerClasses";

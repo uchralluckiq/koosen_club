@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import ClubSearchPage from '../secondaryPages/ClubSearchPage'
-import TimeSchedulePage from '../secondaryPages/TimeSchedulePage'
+import ClubSearchPage from '../mainPageComponents/ClubSearchPage'
+import TimeSchedulePage from '../mainPageComponents/TimeSchedulePage'
 import koosenLogo from '../assets/usedForWeb/koosenLogo.svg'
 
 function MainPage({ onClubSelect, onGoToHome, onGoToLogin }) {
