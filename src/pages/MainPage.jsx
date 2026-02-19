@@ -1,0 +1,157 @@
+import { useState } from 'react'
+import ClubSearchPage from '../secondaryPages/ClubSearchPage'
+import TimeSchedulePage from '../secondaryPages/TimeSchedulePage'
+import koosenLogo from '../assets/usedForWeb/koosenLogo.svg'
+
+function MainPage({ onClubSelect, onGoToHome, onGoToLogin }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [secondaryPage, setSecondaryPage] = useState('clubs')
+
+  const closeMenu = () => setMenuOpen(false)
+
+  const NavLinks = (
+    <>
+      <button
+        type="button"
+        onClick={() => {
+          onGoToHome?.()
+          closeMenu()
+        }}
+        className="rounded-lg px-3 py-2 text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+      >
+        Нүүр
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          setSecondaryPage('clubs')
+          closeMenu()
+        }}
+        className={`rounded-lg px-3 py-2 transition-colors ${
+          secondaryPage === 'clubs'
+            ? 'text-frosted-blue-200 bg-charcoal-blue-800/80'
+            : 'text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100'
+        }`}
+      >
+        Клуб хайх
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          setSecondaryPage('schedule')
+          closeMenu()
+        }}
+        className={`rounded-lg px-3 py-2 transition-colors ${
+          secondaryPage === 'schedule'
+            ? 'text-frosted-blue-200 bg-charcoal-blue-800/80'
+            : 'text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100'
+        }`}
+      >
+        Цагийн хуваарь
+      </button>
+    </>
+  )
+
+  const loginButton = (
+    <button
+      type="button"
+      onClick={() => {
+        onGoToLogin?.()
+        closeMenu()
+      }}
+      className="rounded-lg px-3 py-2 text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+    >
+      Нэвтрэх
+    </button>
+  )
+
+  return (
+    <div className="flex h-screen w-full flex-col overflow-hidden bg-charcoal-blue-950">
+      {/* Mobile menu overlay – on top when open */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity duration-300"
+          onClick={closeMenu}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile slide-in menu – fixed on top, slides from right; hidden on desktop */}
+      <nav
+        className={`
+          fixed top-0 right-0
+          w-64 h-full
+          p-4
+          flex flex-col gap-2
+          bg-slate-blue-950
+          z-50
+          md:hidden
+          transform transition-transform duration-300 ease-in-out
+          ${menuOpen ? 'translate-x-0' : 'translate-x-full'}
+          shadow-xl
+        `}
+      >
+        <div className="flex justify-between items-center border-b border-charcoal-blue-800 pb-3 mb-2">
+          <span className="text-lg font-semibold text-frosted-blue-100">Цэс</span>
+          <button
+            type="button"
+            onClick={closeMenu}
+            className="p-2 rounded-lg text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+            aria-label="Цэс хаах"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        {NavLinks}
+        {loginButton}
+      </nav>
+
+      {/* Top navbar bar (logo + center nav + login right + hamburger) */}
+      <header className="sticky top-0 z-30 shrink-0 border-b border-charcoal-blue-800 bg-slate-blue-950/95 backdrop-blur-sm">
+        <div className="flex h-14 items-center w-full px-4 sm:px-6">
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <img src={koosenLogo} alt="" className="h-8 w-auto" aria-hidden="true" />
+            <span className="text-lg font-semibold text-frosted-blue-100">Koosen Club</span>
+          </div>
+
+          {/* Mobile: spacer to push menu button to the right */}
+          <div className="flex-1 md:hidden" aria-hidden="true" />
+
+          {/* Desktop: center nav */}
+          <nav className="hidden md:flex flex-1 justify-center items-center gap-1">
+            {NavLinks}
+          </nav>
+
+          {/* Desktop: login on the right */}
+          <div className="hidden md:flex items-center flex-shrink-0 ml-auto">
+            {loginButton}
+          </div>
+
+          {/* Mobile menu button – right side */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen((o) => !o)}
+            className="md:hidden p-2 rounded-lg text-frosted-blue-100 hover:bg-charcoal-blue-800 transition-colors"
+            aria-expanded={menuOpen}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      {/* Main section – no overflow here; only the inner grid scrolls (ClubSearchPage) */}
+      <main className="flex-1 flex flex-col min-w-0 min-h-0">
+        {secondaryPage === 'clubs' && (
+          <ClubSearchPage onClubSelect={onClubSelect} />
+        )}
+        {secondaryPage === 'schedule' && <TimeSchedulePage />}
+      </main>
+    </div>
+  )
+}
+
+export default MainPage

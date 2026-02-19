@@ -1,0 +1,65 @@
+import { useEffect, useState } from 'react'
+import Filter from '../components/Filter'
+import ClubBlocks from '../components/ClubBlocks'
+import { clubService } from '../services/clubService'
+
+function ClubSearchPage({ onClubSelect }) {
+  const [clubs, setClubs] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [filters, setFilters] = useState({
+    year: '',
+    class: '',
+    type: '',
+  })
+
+  const loadClubs = async () => {
+    setLoading(true)
+    const data = await clubService.getAll()
+    setClubs(data ?? [])
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    loadClubs()
+  }, [])
+
+  const filteredClubs = clubs.filter((club) => {
+    if (filters.type && club.type !== filters.type) return false
+    if (filters.year) {
+      const year = Number(filters.year)
+      if (!club.collegeYears?.includes(year)) return false
+    }
+    if (filters.class) {
+      const engineerClass = Number(filters.class)
+      if (!club.engineerClasses?.includes(engineerClass)) return false
+    }
+    return true
+  })
+
+  return (
+    <div className="flex-1 min-h-0 flex flex-col">
+      <Filter filters={filters} setFilters={setFilters} />
+      <section className="flex-1 min-h-0 flex flex-col py-6">
+        {loading ? (
+          <div className="flex justify-center items-center py-12 text-charcoal-blue-300 px-4 sm:px-6">
+            Ачааллаж байна...
+          </div>
+        ) : (
+          <div className="club-grid-scroll scrollbar-track-transparent flex-1 min-h-0 overflow-y-auto">
+            <div className="px-4 sm:px-6 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 content-start">
+              {filteredClubs.map((club) => (
+                <ClubBlocks
+                  key={club.id}
+                  club={club}
+                  onSeeMore={() => onClubSelect?.(club)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+    </div>
+  )
+}
+
+export default ClubSearchPage
