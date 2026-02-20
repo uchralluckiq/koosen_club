@@ -1,12 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import Home from './pages/Home.jsx'
 import MainPage from './pages/MainPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
+import { authService } from './services/authService'
 
 function App() {
   const [page, setPage] = useState('home')
   const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const savedUser = authService.getCurrentUser()
+    if (savedUser) {
+      setUser(savedUser)
+    }
+    setLoading(false)
+  }, [])
 
   const handleLogin = (loggedInUser) => {
     setUser(loggedInUser)
@@ -14,7 +24,17 @@ function App() {
   }
 
   const handleLogout = () => {
+    authService.logout()
     setUser(null)
+    setPage('login')
+  }
+
+  if (loading) {
+    return (
+      <div className="app flex items-center justify-center min-h-screen bg-charcoal-blue-950">
+        <div className="text-frosted-blue-100">Уншиж байна...</div>
+      </div>
+    )
   }
 
   return (
@@ -24,7 +44,6 @@ function App() {
       )}
       {page === 'main' && (
         <MainPage
-          onClubSelect={() => {}}
           onGoToHome={() => setPage('home')}
           onGoToLogin={() => setPage('login')}
           user={user}

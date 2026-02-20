@@ -4,8 +4,13 @@ import { clubAllowedEngineerClasses } from "../assets/mockdata/clubsInfo/clubAll
 import { clubAllowedCollegeYears } from "../assets/mockdata/clubsInfo/clubAllowedCollegeYears";
 import { clubSchedules } from "../assets/mockdata/clubsInfo/clubSchedules";
 
-const delay = (data) =>
-  new Promise((resolve) => setTimeout(() => resolve(data), 300));
+const USE_BACKEND = false;
+const API_BASE_URL = "/api";
+
+const delay = (data, ms = 300) =>
+  new Promise((resolve) => setTimeout(() => resolve(data), ms));
+
+let nextClubId = Math.max(...clubs.map((c) => c.id), 0) + 1;
 
 /**
  * Mock club service. Joins CLUBS with allowed engineer classes, college years, and schedules.
@@ -69,6 +74,72 @@ export const clubService = {
       collegeYears,
       schedules,
     });
+  },
+
+  create: async (clubData) => {
+    if (USE_BACKEND) {
+      const response = await fetch(`${API_BASE_URL}/clubs`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(clubData),
+      });
+      if (!response.ok) throw new Error("Failed to create club");
+      return response.json();
+    }
+
+    const newClub = {
+      id: nextClubId++,
+      type: clubData.type || "education",
+      name: clubData.name || "Шинэ клуб",
+      maximum_member: clubData.maximum_member || 20,
+      leader_id: clubData.leader_id,
+      main_media_url: clubData.main_media_url || null,
+      main_media_type: clubData.main_media_type || "image",
+    };
+
+    clubs.push(newClub);
+    return delay({ ...newClub });
+  },
+
+  update: async (id, updates) => {
+    if (USE_BACKEND) {
+      const response = await fetch(`${API_BASE_URL}/clubs/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+      if (!response.ok) throw new Error("Failed to update club");
+      return response.json();
+    }
+
+    const index = clubs.findIndex((c) => c.id === id);
+    if (index === -1) throw new Error("Club not found");
+
+    clubs[index] = { ...clubs[index], ...updates };
+    return delay({ ...clubs[index] });
+  },
+
+  delete: async (id) => {
+    if (USE_BACKEND) {
+      const response = await fetch(`${API_BASE_URL}/clubs/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete club");
+      return response.json();
+    }
+
+    const index = clubs.findIndex((c) => c.id === id);
+    if (index === -1) throw new Error("Club not found");
+
+    clubs.splice(index, 1);
+    return delay({ success: true });
+  },
+
+  canEditClub: (club, user) => {
+    if (!user || !club) return false;
+    if (user.role === "admin") return true;
+    if (club.leader_id === user.id) return true;
+    return false;
   },
 };
 

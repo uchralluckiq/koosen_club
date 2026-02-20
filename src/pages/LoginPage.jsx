@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import koosenImg from '../assets/usedForWeb/koosen.jpg'
-import { users } from '../assets/mockdata/users'
+import { authService } from '../services/authService'
 
 function LoginPage({ onBack, onLogin }) {
   const [email, setEmail] = useState('')
@@ -8,7 +8,7 @@ function LoginPage({ onBack, onLogin }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     setLoading(true)
@@ -19,16 +19,14 @@ function LoginPage({ onBack, onLogin }) {
       return
     }
 
-    const foundUser = users.find(
-      (u) => u.email === email && u.password === password
-    )
-
-    if (foundUser) {
-      onLogin?.(foundUser)
-    } else {
-      setError('И-мэйл эсвэл нууц үг буруу байна')
+    try {
+      const user = await authService.login(email, password)
+      onLogin?.(user)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (

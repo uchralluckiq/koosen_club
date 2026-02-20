@@ -1,15 +1,27 @@
 import { useState } from 'react'
 import ClubSearchPage from '../mainPageComponents/ClubSearchPage'
+import ClubDetailPage from '../mainPageComponents/ClubDetailPage'
 import TimeSchedulePage from '../mainPageComponents/TimeSchedulePage'
 import koosenLogo from '../assets/usedForWeb/koosenLogo.svg'
 
-function MainPage({ onClubSelect, onGoToHome, onGoToLogin, user, onLogout }) {
+function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [accountPanelOpen, setAccountPanelOpen] = useState(false)
   const [secondaryPage, setSecondaryPage] = useState('clubs')
+  const [selectedClubId, setSelectedClubId] = useState(null)
 
   const closeMenu = () => setMenuOpen(false)
   const closeAccountPanel = () => setAccountPanelOpen(false)
+
+  const handleClubSelect = (club) => {
+    setSelectedClubId(club.id)
+    setSecondaryPage('clubDetail')
+  }
+
+  const handleBackFromClubDetail = () => {
+    setSelectedClubId(null)
+    setSecondaryPage('clubs')
+  }
 
   const NavLinks = (
     <>
@@ -227,7 +239,14 @@ function MainPage({ onClubSelect, onGoToHome, onGoToLogin, user, onLogout }) {
       {/* Main section – no overflow here; only the inner grid scrolls (ClubSearchPage) */}
       <main className="flex-1 flex flex-col min-w-0 min-h-0">
         {secondaryPage === 'clubs' && (
-          <ClubSearchPage onClubSelect={onClubSelect} />
+          <ClubSearchPage onClubSelect={handleClubSelect} />
+        )}
+        {secondaryPage === 'clubDetail' && selectedClubId && (
+          <ClubDetailPage
+            clubId={selectedClubId}
+            user={user}
+            onBack={handleBackFromClubDetail}
+          />
         )}
         {secondaryPage === 'schedule' && <TimeSchedulePage />}
       </main>
