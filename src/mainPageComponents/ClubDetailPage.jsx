@@ -1,17 +1,23 @@
 import { useState, useEffect } from 'react'
 import { clubService, CLUB_TYPE_LABELS, ENGINEER_CLASS_LABELS, COLLEGE_YEAR_LABELS } from '../services/clubService'
 import { clubTextBlockService } from '../services/clubTextBlockService'
+import { clubJoinRequestService } from '../services/clubJoinRequestService'
 import ClubTextBlock from '../components/ClubTextBlock'
 import ClubCustomizer from '../components/ClubCustomizer'
+import ClubMemberManager from '../components/ClubMemberManager'
 
-function ClubDetailPage({ clubId, user, onBack }) {
+function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
   const [club, setClub] = useState(null)
   const [textBlocks, setTextBlocks] = useState([])
   const [loading, setLoading] = useState(true)
   const [editMode, setEditMode] = useState(false)
+  const [editTab, setEditTab] = useState('info')
   const [showCustomizer, setShowCustomizer] = useState(false)
+  const [joining, setJoining] = useState(false)
 
   const canEdit = clubService.canEditClub(club, user)
+  const canJoin = clubService.canJoinClub(club, user)
+  const hasPendingRequest = user && club && clubService.hasPendingRequest(club.id, user.id)
 
   useEffect(() => {
     loadClubData()
@@ -69,6 +75,23 @@ function ClubDetailPage({ clubId, user, onBack }) {
     }
   }
 
+  const handleJoinClub = async () => {
+    if (!user) {
+      onGoToLogin?.()
+      return
+    }
+
+    setJoining(true)
+    try {
+      await clubJoinRequestService.sendRequest(clubId, user.id)
+      await loadClubData()
+    } catch (err) {
+      console.error('Failed to send join request:', err)
+    } finally {
+      setJoining(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -117,7 +140,10 @@ function ClubDetailPage({ clubId, user, onBack }) {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => setEditMode(!editMode)}
+                  onClick={() => {
+                    setEditMode(!editMode)
+                    if (!editMode) setEditTab('info')
+                  }}
                   className={`px-4 py-2 rounded-xl font-medium transition-colors ${
                     editMode
                       ? 'bg-honeydew-600 text-honeydew-50'
@@ -130,6 +156,42 @@ function ClubDetailPage({ clubId, user, onBack }) {
             )}
           </div>
 
+          {/* Edit mode tabs navbar */}
+          {editMode && (
+            <div className="rounded-xl bg-charcoal-blue-900/80 border border-charcoal-blue-800 p-1 flex gap-1">
+              <button
+                type="button"
+                onClick={() => setEditTab('info')}
+                className={`flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors ${
+                  editTab === 'info'
+                    ? 'bg-light-cyan-600 text-white'
+                    : 'text-charcoal-blue-300 hover:text-frosted-blue-100 hover:bg-charcoal-blue-800'
+                }`}
+              >
+                Клубын мэдээлэл
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditTab('members')}
+                className={`flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors ${
+                  editTab === 'members'
+                    ? 'bg-light-cyan-600 text-white'
+                    : 'text-charcoal-blue-300 hover:text-frosted-blue-100 hover:bg-charcoal-blue-800'
+                }`}
+              >
+                Гишүүд удирдах
+              </button>
+            </div>
+          )}
+
+          {/* Member management tab content */}
+          {editMode && editTab === 'members' && (
+            <ClubMemberManager club={club} user={user} onMemberChange={loadClubData} />
+          )}
+
+          {/* Club info tab content (default view) */}
+          {(!editMode || editTab === 'info') && (
+            <>
           {/* Club main info card */}
           <div className="rounded-2xl bg-charcoal-blue-900/60 border border-charcoal-blue-800 overflow-hidden">
             {club.main_media_url && (
@@ -211,6 +273,26 @@ function ClubDetailPage({ clubId, user, onBack }) {
                   </div>
                 )}
               </div>
+
+              {/* Join club button */}
+              {hasPendingRequest ? (
+                <button
+                  type="button"
+                  disabled
+                  className="w-full py-3 rounded-xl font-semibold bg-charcoal-blue-700 text-charcoal-blue-400 cursor-not-allowed mt-4"
+                >
+                  Хүсэлт илгээсэн
+                </button>
+              ) : canJoin && (
+                <button
+                  type="button"
+                  onClick={handleJoinClub}
+                  disabled={joining}
+                  className="w-full py-3 rounded-xl font-semibold bg-honeydew-600 text-honeydew-50 hover:bg-honeydew-500 transition-colors disabled:opacity-50 mt-4"
+                >
+                  {joining ? 'Илгээж байна...' : 'Элсэх'}
+                </button>
+              )}
             </div>
           </div>
 
@@ -226,7 +308,7 @@ function ClubDetailPage({ clubId, user, onBack }) {
               />
             ))}
 
-            {editMode && (
+            {editMode && editTab === 'info' && (
               <button
                 type="button"
                 onClick={handleAddBlock}
@@ -239,6 +321,8 @@ function ClubDetailPage({ clubId, user, onBack }) {
               </button>
             )}
           </div>
+            </>
+          )}
         </div>
       </div>
 

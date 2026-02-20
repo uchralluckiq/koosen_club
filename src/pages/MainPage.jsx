@@ -239,13 +239,18 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
       {/* Main section – no overflow here; only the inner grid scrolls (ClubSearchPage) */}
       <main className="flex-1 flex flex-col min-w-0 min-h-0">
         {secondaryPage === 'clubs' && (
-          <ClubSearchPage onClubSelect={handleClubSelect} />
+          <ClubSearchPage 
+            onClubSelect={handleClubSelect} 
+            user={user}
+            onGoToLogin={onGoToLogin}
+          />
         )}
         {secondaryPage === 'clubDetail' && selectedClubId && (
           <ClubDetailPage
             clubId={selectedClubId}
             user={user}
             onBack={handleBackFromClubDetail}
+            onGoToLogin={onGoToLogin}
           />
         )}
         {secondaryPage === 'schedule' && <TimeSchedulePage />}

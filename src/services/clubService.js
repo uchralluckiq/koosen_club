@@ -3,6 +3,7 @@ import { clubMembers } from "../assets/mockdata/clubsInfo/clubMembers";
 import { clubAllowedEngineerClasses } from "../assets/mockdata/clubsInfo/clubAllowedEngineerClasses";
 import { clubAllowedCollegeYears } from "../assets/mockdata/clubsInfo/clubAllowedCollegeYears";
 import { clubSchedules } from "../assets/mockdata/clubsInfo/clubSchedules";
+import { clubJoinRequests } from "../assets/mockdata/clubsInfo/clubJoinRequests";
 
 const USE_BACKEND = false;
 const API_BASE_URL = "/api";
@@ -140,6 +141,83 @@ export const clubService = {
     if (user.role === "admin") return true;
     if (club.leader_id === user.id) return true;
     return false;
+  },
+
+  isMember: (clubId, userId) => {
+    if (!clubId || !userId) return false;
+    return clubMembers.some(
+      (m) => m.club_id === clubId && m.student_id === userId
+    );
+  },
+
+  isLeader: (club, userId) => {
+    if (!club || !userId) return false;
+    return club.leader_id === userId;
+  },
+
+  canJoinClub: (club, user) => {
+    if (!club) return false;
+    if (!user) return true;
+    if (user.role === "admin" || user.role === "teacher") return false;
+    if (clubService.isLeader(club, user.id)) return false;
+    if (clubService.isMember(club.id, user.id)) return false;
+    if (clubService.hasPendingRequest(club.id, user.id)) return false;
+    return true;
+  },
+
+  hasPendingRequest: (clubId, userId) => {
+    if (!clubId || !userId) return false;
+    return clubJoinRequests.some(
+      (r) => r.club_id === clubId && r.student_id === userId && r.status === "pending"
+    );
+  },
+
+  joinClub: async (clubId, userId) => {
+    if (USE_BACKEND) {
+      const response = await fetch(`${API_BASE_URL}/clubs/${clubId}/join`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+      if (!response.ok) throw new Error("Failed to join club");
+      return response.json();
+    }
+
+    if (clubMembers.some((m) => m.club_id === clubId && m.student_id === userId)) {
+      throw new Error("Already a member");
+    }
+
+    clubMembers.push({ club_id: clubId, student_id: userId });
+    return delay({ success: true });
+  },
+
+  getMembers: async (clubId) => {
+    if (USE_BACKEND) {
+      const response = await fetch(`${API_BASE_URL}/clubs/${clubId}/members`);
+      if (!response.ok) throw new Error("Failed to get members");
+      return response.json();
+    }
+
+    const members = clubMembers.filter((m) => m.club_id === clubId);
+    return delay(members.map((m) => ({ ...m })));
+  },
+
+  removeMember: async (clubId, userId) => {
+    if (USE_BACKEND) {
+      const response = await fetch(`${API_BASE_URL}/clubs/${clubId}/members/${userId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to remove member");
+      return response.json();
+    }
+
+    const index = clubMembers.findIndex(
+      (m) => m.club_id === clubId && m.student_id === userId
+    );
+    if (index === -1) throw new Error("Member not found");
+
+    clubMembers.splice(index, 1);
+    return delay({ success: true });
   },
 };
 

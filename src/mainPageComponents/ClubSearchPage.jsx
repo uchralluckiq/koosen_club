@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react'
 import Filter from '../components/Filter'
 import ClubBlocks from '../components/ClubBlocks'
 import { clubService } from '../services/clubService'
+import { clubJoinRequestService } from '../services/clubJoinRequestService'
 
-function ClubSearchPage({ onClubSelect }) {
+function ClubSearchPage({ onClubSelect, user, onGoToLogin }) {
   const [clubs, setClubs] = useState([])
   const [loading, setLoading] = useState(true)
+  const [requestSent, setRequestSent] = useState(false)
   const [filters, setFilters] = useState({
     year: '',
     class: '',
@@ -17,6 +19,22 @@ function ClubSearchPage({ onClubSelect }) {
     const data = await clubService.getAll()
     setClubs(data ?? [])
     setLoading(false)
+  }
+
+  const handleJoinClick = async (club) => {
+    if (!user) {
+      onGoToLogin?.()
+      return
+    }
+
+    try {
+      await clubJoinRequestService.sendRequest(club.id, user.id)
+      setRequestSent(true)
+      setTimeout(() => setRequestSent(false), 3000)
+      loadClubs()
+    } catch (err) {
+      console.error('Failed to send join request:', err)
+    }
   }
 
   useEffect(() => {
@@ -37,7 +55,14 @@ function ClubSearchPage({ onClubSelect }) {
   })
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col">
+    <div className="flex-1 min-h-0 flex flex-col relative">
+      {/* Request sent notification */}
+      {requestSent && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-xl bg-honeydew-600 text-honeydew-50 font-medium shadow-lg animate-fade-in">
+          Хүсэлт амжилттай илгээгдлээ!
+        </div>
+      )}
+
       <Filter filters={filters} setFilters={setFilters} />
       <section className="flex-1 min-h-0 flex flex-col py-6">
         {loading ? (
@@ -51,7 +76,9 @@ function ClubSearchPage({ onClubSelect }) {
                 <ClubBlocks
                   key={club.id}
                   club={club}
+                  user={user}
                   onSeeMore={() => onClubSelect?.(club)}
+                  onJoinClick={handleJoinClick}
                 />
               ))}
             </div>

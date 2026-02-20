@@ -2,9 +2,13 @@ import {
   ENGINEER_CLASS_LABELS,
   CLUB_TYPE_LABELS,
   COLLEGE_YEAR_LABELS,
+  clubService,
 } from '../services/clubService'
 
-function ClubBlocks({ club, onSeeMore }) {
+function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
+  const canJoin = clubService.canJoinClub(club, user)
+  const hasPendingRequest = user && clubService.hasPendingRequest(club.id, user.id)
+  const showJoinButton = canJoin || hasPendingRequest
   const {
     name,
     type,
@@ -98,14 +102,31 @@ function ClubBlocks({ club, onSeeMore }) {
           </div>
         )}
       </div>
-      <div className="mt-4">
+      <div className="mt-4 flex gap-2">
         <button
           type="button"
           onClick={() => onSeeMore?.(club)}
-          className="w-full py-2 rounded-xl font-semibold bg-light-cyan-600/90 text-light-cyan-50 hover:bg-light-cyan-500/90 transition-colors shadow-sm"
+          className={`py-2 rounded-xl font-semibold bg-light-cyan-600/90 text-light-cyan-50 hover:bg-light-cyan-500/90 transition-colors shadow-sm ${showJoinButton ? 'flex-1' : 'w-full'}`}
         >
           Дэлгэрэнгүй
         </button>
+        {hasPendingRequest ? (
+          <button
+            type="button"
+            disabled
+            className="flex-1 py-2 rounded-xl font-semibold bg-charcoal-blue-700 text-charcoal-blue-400 cursor-not-allowed shadow-sm"
+          >
+            Хүсэлт илгээсэн
+          </button>
+        ) : canJoin && (
+          <button
+            type="button"
+            onClick={() => onJoinClick?.(club)}
+            className="flex-1 py-2 rounded-xl font-semibold bg-honeydew-600 text-honeydew-50 hover:bg-honeydew-500 transition-colors shadow-sm"
+          >
+            Элсэх
+          </button>
+        )}
       </div>
     </div>
   )
