@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import koosenImg from '../assets/usedForWeb/koosen.jpg'
+import { users } from '../assets/mockdata/users'
 
-function LoginPage({ onBack }) {
+function LoginPage({ onBack, onLogin }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -11,12 +12,22 @@ function LoginPage({ onBack }) {
     e.preventDefault()
     setError('')
     setLoading(true)
+    
     if (!email || !password) {
       setError('Бүх талбарыг бөглөнө үү')
       setLoading(false)
       return
     }
-    // TODO: connect to auth
+
+    const foundUser = users.find(
+      (u) => u.email === email && u.password === password
+    )
+
+    if (foundUser) {
+      onLogin?.(foundUser)
+    } else {
+      setError('И-мэйл эсвэл нууц үг буруу байна')
+    }
     setLoading(false)
   }
 

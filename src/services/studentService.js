@@ -1,4 +1,4 @@
-import { students } from "../assets/mockdata/students";
+import { students } from "../assets/mockdata/classInfo/students";
 
 const delay = (data) =>
   new Promise((resolve) => setTimeout(() => resolve(data), 400));

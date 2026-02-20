@@ -6,6 +6,16 @@ import LoginPage from './pages/LoginPage.jsx'
 
 function App() {
   const [page, setPage] = useState('home')
+  const [user, setUser] = useState(null)
+
+  const handleLogin = (loggedInUser) => {
+    setUser(loggedInUser)
+    setPage('main')
+  }
+
+  const handleLogout = () => {
+    setUser(null)
+  }
 
   return (
     <div className="app">
@@ -17,9 +27,16 @@ function App() {
           onClubSelect={() => {}}
           onGoToHome={() => setPage('home')}
           onGoToLogin={() => setPage('login')}
+          user={user}
+          onLogout={handleLogout}
         />
       )}
-      {page === 'login' && <LoginPage onBack={() => setPage('home')} />}
+      {page === 'login' && (
+        <LoginPage 
+          onBack={() => setPage('main')} 
+          onLogin={handleLogin}
+        />
+      )}
     </div>
   )
 }

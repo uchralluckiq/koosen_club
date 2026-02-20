@@ -1,8 +1,8 @@
-import { clubs } from "../assets/mockdata/clubs";
-import { clubMembers } from "../assets/mockdata/clubMembers";
-import { clubAllowedEngineerClasses } from "../assets/mockdata/clubAllowedEngineerClasses";
-import { clubAllowedCollegeYears } from "../assets/mockdata/clubAllowedCollegeYears";
-import { clubSchedules } from "../assets/mockdata/clubSchedules";
+import { clubs } from "../assets/mockdata/clubsInfo/clubs";
+import { clubMembers } from "../assets/mockdata/clubsInfo/clubMembers";
+import { clubAllowedEngineerClasses } from "../assets/mockdata/clubsInfo/clubAllowedEngineerClasses";
+import { clubAllowedCollegeYears } from "../assets/mockdata/clubsInfo/clubAllowedCollegeYears";
+import { clubSchedules } from "../assets/mockdata/clubsInfo/clubSchedules";
 
 const delay = (data) =>
   new Promise((resolve) => setTimeout(() => resolve(data), 300));

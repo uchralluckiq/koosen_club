@@ -3,11 +3,13 @@ import ClubSearchPage from '../mainPageComponents/ClubSearchPage'
 import TimeSchedulePage from '../mainPageComponents/TimeSchedulePage'
 import koosenLogo from '../assets/usedForWeb/koosenLogo.svg'
 
-function MainPage({ onClubSelect, onGoToHome, onGoToLogin }) {
+function MainPage({ onClubSelect, onGoToHome, onGoToLogin, user, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [accountPanelOpen, setAccountPanelOpen] = useState(false)
   const [secondaryPage, setSecondaryPage] = useState('clubs')
 
   const closeMenu = () => setMenuOpen(false)
+  const closeAccountPanel = () => setAccountPanelOpen(false)
 
   const NavLinks = (
     <>
@@ -52,7 +54,21 @@ function MainPage({ onClubSelect, onGoToHome, onGoToLogin }) {
     </>
   )
 
-  const loginButton = (
+  const loginButton = user ? (
+    <button
+      type="button"
+      onClick={() => {
+        setAccountPanelOpen((o) => !o)
+        closeMenu()
+      }}
+      className="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+    >
+      <div className="w-7 h-7 rounded-full bg-light-cyan-600 flex items-center justify-center text-white text-sm font-semibold">
+        {user.name?.charAt(0).toUpperCase()}
+      </div>
+      <span>{user.name}</span>
+    </button>
+  ) : (
     <button
       type="button"
       onClick={() => {
@@ -107,6 +123,71 @@ function MainPage({ onClubSelect, onGoToHome, onGoToLogin }) {
         {NavLinks}
         {loginButton}
       </nav>
+
+      {/* Account panel overlay */}
+      {accountPanelOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+          onClick={closeAccountPanel}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Account panel – slides down from top */}
+      <div
+        className={`
+          fixed top-0 left-0 right-0
+          p-4
+          bg-slate-blue-950
+          z-50
+          transform transition-transform duration-300 ease-in-out
+          ${accountPanelOpen ? 'translate-y-0' : '-translate-y-full'}
+          shadow-xl
+          border-b border-charcoal-blue-800
+        `}
+      >
+        <div className="max-w-md mx-auto">
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-lg font-semibold text-frosted-blue-100">Хэрэглэгч</span>
+            <button
+              type="button"
+              onClick={closeAccountPanel}
+              className="p-2 rounded-lg text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+              aria-label="Хаах"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {user && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-4 p-3 rounded-xl bg-charcoal-blue-900/60 border border-charcoal-blue-800">
+                <div className="w-12 h-12 rounded-full bg-light-cyan-600 flex items-center justify-center text-white text-xl font-semibold">
+                  {user.name?.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="text-frosted-blue-100 font-medium">{user.name}</p>
+                  <p className="text-charcoal-blue-400 text-sm">{user.email}</p>
+                  <p className="text-charcoal-blue-500 text-xs capitalize">{user.role}</p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  onLogout?.()
+                  closeAccountPanel()
+                }}
+                className="w-full py-3 rounded-xl font-semibold bg-red-600/80 text-white hover:bg-red-500/80 transition-colors"
+              >
+                Гарах
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Top navbar bar (logo + center nav + login right + hamburger) */}
       <header className="sticky top-0 z-30 shrink-0 border-b border-charcoal-blue-800 bg-slate-blue-950/95 backdrop-blur-sm">
