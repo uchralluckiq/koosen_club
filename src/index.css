@@ -123,94 +123,94 @@
     --color-light-cyan-900: #05262e;
     --color-light-cyan-950: #041b20; */
   /* Main backgrounds */
-  --color-main-background: #0b1519;
-  --color-main-background-overlay: #0b1519cc;
-  --color-main-background-overlay-light: #0b15194d;
+  --color-main-background: hsl(197, 39%, 7%);
+  --color-main-background-overlay: hsla(197, 40%, 7%, 0.8);
+  --color-main-background-overlay-light: hsla(197, 40%, 7%, 0.3);
 
   /* Block backgrounds */
-  --color-block-background: #0f1d24;
-  --color-block-background-muted: #0f1d2499;
-  --color-block-background-strong: #0f1d24cc;
-  --color-block-background-filter: #0f1d244d;
+  --color-block-background: hsl(207, 41%, 10%);
+  --color-block-background-muted: hsla(207, 40%, 10%, 0.6);
+  --color-block-background-strong: hsla(207, 40%, 10%, 0.8);
+  --color-block-background-filter: hsla(207, 40%, 10%, 0.3);
 
   /* Nav / header backgrounds */
-  --color-nav-background: #09091b;
+  --color-nav-background: hsl(240, 33%, 8%);
 
   /* Input backgrounds */
-  --color-input-background: #1e3b48;
+  --color-input-background: hsl(197, 40%, 20%);
 
   /* Button backgrounds – primary (cyan) */
-  --color-button-primary: #149ab8;
-  --color-button-primary-subtle: #149ab8e6;
-  --color-button-primary-hover: #19c0e6;
-  --color-button-primary-hover-subtle: #19c0e6e6;
-  --color-button-primary-text: #e8f9fc;
+  --color-button-primary: hsl(191, 80%, 40%);
+  --color-button-primary-subtle: hsla(191, 80%, 40%, 0.9);
+  --color-button-primary-hover: hsl(191, 80%, 50%);
+  --color-button-primary-hover-subtle: hsla(191, 80%, 50%, 0.9);
+  --color-button-primary-text: hsl(191, 80%, 95%);
 
   /* Button backgrounds – secondary/outline */
-  --color-button-outline-text: #d1f2fa;
-  --color-button-outline-border: #47cdebb3;
-  --color-button-outline-hover: #05262e66;
+  --color-button-outline-text: hsl(191, 80%, 90%);
+  --color-button-outline-border: hsla(191, 80%, 60%, 0.7);
+  --color-button-outline-hover: hsla(197, 76%, 10%, 0.4);
 
   /* Button backgrounds – green (join, approve) */
-  --color-button-green: #4c8745;
-  --color-button-green-hover: #5fa857;
-  --color-button-green-text: #eff6ee;
+  --color-button-green: hsl(115, 30%, 40%);
+  --color-button-green-hover: hsl(115, 30%, 50%);
+  --color-button-green-text: hsl(115, 30%, 95%);
 
   /* Button backgrounds – disabled */
-  --color-button-disabled: #2d586c;
+  --color-button-disabled: hsl(197, 40%, 30%);
 
   /* Block accent backgrounds */
-  --color-block-header-accent: #13221133;
-  --color-block-header-schedule: #13221166;
+  --color-block-header-accent: hsla(115, 30%, 10%, 0.2);
+  --color-block-header-schedule: hsla(115, 30%, 10%, 0.4);
 
   /* Badge – type label */
-  --color-badge-type-bg: #9fcb9ae6;
-  --color-badge-type-text: #132211;
+  --color-badge-type-bg: hsla(115, 30%, 70%, 0.9);
+  --color-badge-type-text: hsl(115, 30%, 10%);
 
   /* Text */
-  --color-text-title: #e9f8fb;
-  --color-text-heading: #d4f2f7;
-  --color-text-heading-accent: #dfeedd;
-  --color-text-heading-schedule: #bfdcbc;
-  --color-text-label: #a9e5ef;
-  --color-text-paragraph: #b7d4e1;
-  --color-text-paragraph-light: #dbe9f0;
-  --color-text-muted: #93bed2;
-  --color-text-placeholder: #6fa8c3;
-  --color-text-caption: #4b93b4;
-  --color-text-caption-muted: #3c7590;
+  --color-text-title: hsl(191, 63%, 95%);
+  --color-text-heading: hsl(191, 63%, 91%);
+  --color-text-heading-accent: hsl(115, 30%, 91%);
+  --color-text-heading-schedule: hsl(115, 30%, 82%);
+  --color-text-label: hsl(191, 63%, 82%);
+  --color-text-paragraph: hsl(207, 40%, 82%);
+  --color-text-paragraph-light: hsl(207, 40%, 91%);
+  --color-text-muted: hsl(207, 40%, 72%);
+  --color-text-placeholder: hsl(207, 40%, 60%);
+  --color-text-caption: hsl(207, 40%, 50%);
+  --color-text-caption-muted: hsl(207, 40%, 45%);
 
   /* Borders */
-  --color-border-default: #1e3b48;
-  --color-border-input: #2d586c;
-  --color-border-hover: #104c5680;
-  --color-border-accent: #4c874580;
+  --color-border-default: hsl(197, 40%, 20%);
+  --color-border-input: hsl(197, 40%, 30%);
+  --color-border-hover: hsla(187, 70%, 20%, 0.5);
+  --color-border-accent: hsla(115, 30%, 40%, 0.5);
 
   /* Focus ring */
-  --color-focus-ring: #28bdd7;
+  --color-focus-ring: hsl(191, 70%, 50%);
 
   /* Block selected / nav active */
-  --color-nav-active: #1e3b48cc;
+  --color-nav-active: hsla(197, 40%, 20%, 0.8);
 
   /* Block hover (semi-transparent) */
-  --color-block-hover: #1e3b4899;
+  --color-block-hover: hsla(197, 40%, 20%, 0.6);
 
   /* Block selected (room tab, etc.) */
-  --color-block-selected-bg: #05262e66;
-  --color-text-selected: #d1f2fa;
+  --color-block-selected-bg: hsla(197, 75%, 10%, 0.4);
+  --color-text-selected: hsl(191, 80%, 90%);
 
   /* Add block dashed border */
-  --color-border-add-block: #2d586c;
-  --color-text-add-block: #6fa8c3;
-  --color-border-add-block-hover: #2097ac;
-  --color-text-add-block-hover: #7ed7e7;
+  --color-border-add-block: hsl(197, 40%, 30%);
+  --color-text-add-block: hsl(207, 40%, 60%);
+  --color-border-add-block-hover: hsl(191, 70%, 38%);
+  --color-text-add-block-hover: hsl(191, 70%, 68%);
 
   /* Secondary button border */
-  --color-border-secondary: #3c7590;
+  --color-border-secondary: hsl(207, 40%, 45%);
 
   /* Scrollbar */
-  --color-scrollbar-thumb: #149ab8;
-  --color-scrollbar-thumb-hover: #19c0e6;
+  --color-scrollbar-thumb: hsl(191, 80%, 40%);
+  --color-scrollbar-thumb-hover: hsl(191, 80%, 50%);
 }
 
 /* Custom scrollbars (all scrollable areas) */
