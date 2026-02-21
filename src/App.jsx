@@ -32,7 +32,7 @@ function App() {
   if (loading) {
     return (
       <div className="app flex items-center justify-center min-h-screen bg-charcoal-blue-950">
-        <div className="text-frosted-blue-100">Уншиж байна...</div>
+        <div className="text-sm sm:text-base text-frosted-blue-100">Уншиж байна...</div>
       </div>
     )
   }
@@ -40,7 +40,11 @@ function App() {
   return (
     <div className="app">
       {page === 'home' && (
-        <Home onGoToMain={() => setPage('main')} onGoToLogin={() => setPage('login')} />
+        <Home 
+          onGoToMain={() => setPage('main')} 
+          onGoToLogin={() => setPage('login')} 
+          user={user}
+        />
       )}
       {page === 'main' && (
         <MainPage

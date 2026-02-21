@@ -46,7 +46,7 @@ function ClubTextBlock({ block, isEditing, onUpdate, onDelete }) {
             value={localTitle}
             onChange={(e) => setLocalTitle(e.target.value)}
             placeholder="Блокны гарчиг"
-            className="flex-1 rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500 placeholder-charcoal-blue-400"
+            className="flex-1 rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 text-sm sm:text-base px-3 sm:px-4 py-2 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500 placeholder-charcoal-blue-400"
           />
           <button
             type="button"
@@ -65,7 +65,7 @@ function ClubTextBlock({ block, isEditing, onUpdate, onDelete }) {
           onChange={(e) => setLocalContent(e.target.value)}
           placeholder="Агуулга бичих..."
           rows={4}
-          className="w-full rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500 placeholder-charcoal-blue-400 resize-none"
+          className="w-full rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500 placeholder-charcoal-blue-400 resize-none"
         />
 
         <div className="flex flex-col sm:flex-row gap-3">
@@ -74,12 +74,12 @@ function ClubTextBlock({ block, isEditing, onUpdate, onDelete }) {
             value={localMediaUrl}
             onChange={(e) => setLocalMediaUrl(e.target.value)}
             placeholder="Медиа URL (зураг/видео)"
-            className="flex-1 rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500 placeholder-charcoal-blue-400"
+            className="flex-1 rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 text-sm sm:text-base px-3 sm:px-4 py-2 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500 placeholder-charcoal-blue-400"
           />
           <select
             value={localMediaType}
             onChange={(e) => setLocalMediaType(e.target.value)}
-            className="rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500"
+            className="rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 text-sm sm:text-base px-3 sm:px-4 py-2 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500"
           >
             <option value="image">Зураг</option>
             <option value="video">Видео</option>
@@ -99,7 +99,7 @@ function ClubTextBlock({ block, isEditing, onUpdate, onDelete }) {
         <button
           type="button"
           onClick={handleSave}
-          className="w-full py-2 rounded-xl font-semibold bg-light-cyan-600/90 text-light-cyan-50 hover:bg-light-cyan-500/90 transition-colors"
+          className="w-full py-2 rounded-xl text-xs sm:text-sm font-semibold bg-light-cyan-600/90 text-light-cyan-50 hover:bg-light-cyan-500/90 transition-colors"
         >
           Хадгалах
         </button>
@@ -110,11 +110,11 @@ function ClubTextBlock({ block, isEditing, onUpdate, onDelete }) {
   return (
     <div className="p-4 sm:p-5 rounded-2xl bg-charcoal-blue-900/60 border border-charcoal-blue-800 space-y-3">
       {block.title && (
-        <h3 className="text-lg font-semibold text-frosted-blue-100">{block.title}</h3>
+        <h3 className="text-sm sm:text-lg font-semibold text-frosted-blue-100">{block.title}</h3>
       )}
       {renderMedia()}
       {block.content && (
-        <p className="text-charcoal-blue-200 whitespace-pre-wrap">{block.content}</p>
+        <p className="text-xs sm:text-sm text-charcoal-blue-200 whitespace-pre-wrap">{block.content}</p>
       )}
     </div>
   )

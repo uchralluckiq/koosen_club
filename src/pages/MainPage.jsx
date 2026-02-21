@@ -2,7 +2,7 @@ import { useState } from 'react'
 import ClubSearchPage from '../mainPageComponents/ClubSearchPage'
 import ClubDetailPage from '../mainPageComponents/ClubDetailPage'
 import TimeSchedulePage from '../mainPageComponents/TimeSchedulePage'
-import koosenLogo from '../assets/usedForWeb/koosenLogo.svg'
+import koosenLogo from '../assets/webImages/koosenLogo.png'
 
 function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -31,7 +31,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
           onGoToHome?.()
           closeMenu()
         }}
-        className="rounded-lg px-3 py-2 text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+        className="rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
       >
         Нүүр
       </button>
@@ -41,7 +41,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
           setSecondaryPage('clubs')
           closeMenu()
         }}
-        className={`rounded-lg px-3 py-2 transition-colors ${
+        className={`rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-colors ${
           secondaryPage === 'clubs'
             ? 'text-frosted-blue-200 bg-charcoal-blue-800/80'
             : 'text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100'
@@ -55,7 +55,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
           setSecondaryPage('schedule')
           closeMenu()
         }}
-        className={`rounded-lg px-3 py-2 transition-colors ${
+        className={`rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-colors ${
           secondaryPage === 'schedule'
             ? 'text-frosted-blue-200 bg-charcoal-blue-800/80'
             : 'text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100'
@@ -73,9 +73,9 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         setAccountPanelOpen((o) => !o)
         closeMenu()
       }}
-      className="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+      className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
     >
-      <div className="w-7 h-7 rounded-full bg-light-cyan-600 flex items-center justify-center text-white text-sm font-semibold">
+      <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-light-cyan-600 flex items-center justify-center text-white text-xs sm:text-sm font-semibold">
         {user.name?.charAt(0).toUpperCase()}
       </div>
       <span>{user.name}</span>
@@ -87,7 +87,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         onGoToLogin?.()
         closeMenu()
       }}
-      className="rounded-lg px-3 py-2 text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+      className="rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
     >
       Нэвтрэх
     </button>
@@ -120,7 +120,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         `}
       >
         <div className="flex justify-between items-center border-b border-charcoal-blue-800 pb-3 mb-2">
-          <span className="text-lg font-semibold text-frosted-blue-100">Цэс</span>
+          <span className="text-sm sm:text-lg font-semibold text-frosted-blue-100">Цэс</span>
           <button
             type="button"
             onClick={closeMenu}
@@ -160,7 +160,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
       >
         <div className="max-w-md mx-auto">
           <div className="flex justify-between items-center mb-4">
-            <span className="text-lg font-semibold text-frosted-blue-100">Хэрэглэгч</span>
+            <span className="text-sm sm:text-lg font-semibold text-frosted-blue-100">Хэрэглэгч</span>
             <button
               type="button"
               onClick={closeAccountPanel}
@@ -176,13 +176,13 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
           {user && (
             <div className="space-y-4">
               <div className="flex items-center gap-4 p-3 rounded-xl bg-charcoal-blue-900/60 border border-charcoal-blue-800">
-                <div className="w-12 h-12 rounded-full bg-light-cyan-600 flex items-center justify-center text-white text-xl font-semibold">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-light-cyan-600 flex items-center justify-center text-white text-base sm:text-xl font-semibold">
                   {user.name?.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <p className="text-frosted-blue-100 font-medium">{user.name}</p>
-                  <p className="text-charcoal-blue-400 text-sm">{user.email}</p>
-                  <p className="text-charcoal-blue-500 text-xs capitalize">{user.role}</p>
+                  <p className="text-frosted-blue-100 text-sm sm:text-base font-medium">{user.name}</p>
+                  <p className="text-charcoal-blue-400 text-xs sm:text-sm">{user.email}</p>
+                  <p className="text-charcoal-blue-500 text-[10px] sm:text-xs capitalize">{user.role}</p>
                 </div>
               </div>
 
@@ -192,7 +192,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
                   onLogout?.()
                   closeAccountPanel()
                 }}
-                className="w-full py-3 rounded-xl font-semibold bg-red-600/80 text-white hover:bg-red-500/80 transition-colors"
+                className="w-full py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-semibold bg-red-600/80 text-white hover:bg-red-500/80 transition-colors"
               >
                 Гарах
               </button>
@@ -205,8 +205,8 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
       <header className="sticky top-0 z-30 shrink-0 border-b border-charcoal-blue-800 bg-slate-blue-950/95 backdrop-blur-sm">
         <div className="flex h-14 items-center w-full px-4 sm:px-6">
           <div className="flex items-center gap-2 flex-shrink-0">
-            <img src={koosenLogo} alt="" className="h-8 w-auto" aria-hidden="true" />
-            <span className="text-lg font-semibold text-frosted-blue-100">Koosen Club</span>
+            <img src={koosenLogo} alt="" className="h-6 sm:h-8 w-auto" aria-hidden="true" />
+            <span className="text-sm sm:text-lg font-semibold text-frosted-blue-100">Koosen Club</span>
           </div>
 
           {/* Mobile: spacer to push menu button to the right */}

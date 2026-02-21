@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import koosenImg from '../assets/usedForWeb/koosen.jpg'
+import koosenImg from '../assets/webImages/koosen.jpg'
 import { authService } from '../services/authService'
 
 function LoginPage({ onBack, onLogin }) {
@@ -38,7 +38,7 @@ function LoginPage({ onBack, onLogin }) {
       <div className="absolute inset-0 bg-charcoal-blue-950/80" aria-hidden="true" />
 
       <div className="relative z-10 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-frosted-blue-50 mb-6 text-center">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-frosted-blue-50 mb-6 text-center">
           Нэвтрэх
         </h1>
 
@@ -47,13 +47,13 @@ function LoginPage({ onBack, onLogin }) {
           className="rounded-2xl border border-charcoal-blue-800 bg-charcoal-blue-900/60 p-6 sm:p-8 shadow-lg"
         >
           {error && (
-            <div className="rounded-lg bg-red-500/20 border border-red-500 text-red-300 px-4 py-2 text-sm mb-4">
+            <div className="rounded-lg bg-red-500/20 border border-red-500 text-red-300 px-4 py-2 text-xs sm:text-sm mb-4">
               {error}
             </div>
           )}
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-frosted-blue-200 mb-2">
+            <label className="block text-xs sm:text-sm font-medium text-frosted-blue-200 mb-2">
               И-мэйл
             </label>
             <input
@@ -61,13 +61,13 @@ function LoginPage({ onBack, onLogin }) {
               placeholder="И-мэйл хаягаа оруулна уу"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500 focus:border-transparent placeholder-charcoal-blue-400"
+              className="w-full rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 text-sm sm:text-base px-4 py-2.5 sm:py-3 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500 focus:border-transparent placeholder-charcoal-blue-400"
               disabled={loading}
             />
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-frosted-blue-200 mb-2">
+            <label className="block text-xs sm:text-sm font-medium text-frosted-blue-200 mb-2">
               Нууц үг
             </label>
             <input
@@ -75,7 +75,7 @@ function LoginPage({ onBack, onLogin }) {
               placeholder="Нууц үгээ оруулна уу"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500 focus:border-transparent placeholder-charcoal-blue-400"
+              className="w-full rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 text-sm sm:text-base px-4 py-2.5 sm:py-3 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500 focus:border-transparent placeholder-charcoal-blue-400"
               disabled={loading}
             />
           </div>
@@ -84,14 +84,14 @@ function LoginPage({ onBack, onLogin }) {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-3 rounded-xl font-semibold bg-light-cyan-600/90 text-light-cyan-50 hover:bg-light-cyan-500/90 transition-colors disabled:opacity-50 shadow-sm"
+              className="flex-1 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-semibold bg-light-cyan-600/90 text-light-cyan-50 hover:bg-light-cyan-500/90 transition-colors disabled:opacity-50 shadow-sm"
             >
               {loading ? 'Түр хүлээнэ үү...' : 'Нэвтрэх'}
             </button>
             <button
               type="button"
               onClick={onBack}
-              className="flex-1 py-3 rounded-xl font-semibold border-2 border-light-cyan-400/80 text-light-cyan-100 hover:bg-light-cyan-900/40 transition-colors"
+              className="flex-1 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-semibold border-2 border-light-cyan-400/80 text-light-cyan-100 hover:bg-light-cyan-900/40 transition-colors"
             >
               Буцах
             </button>

@@ -1,7 +1,6 @@
 import {
   ENGINEER_CLASS_LABELS,
   CLUB_TYPE_LABELS,
-  COLLEGE_YEAR_LABELS,
   clubService,
 } from '../services/clubService'
 
@@ -32,7 +31,7 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
   const count = memberCount ?? (memberIds?.length ?? 0)
   const typeLabel = type ? (CLUB_TYPE_LABELS[type] ?? type) : null
   const engineerLabels = engineerClasses.map((c) => ENGINEER_CLASS_LABELS[c]).filter(Boolean)
-  const collegeYearLabels = collegeYears.map((y) => COLLEGE_YEAR_LABELS[y]).filter(Boolean)
+  const collegeYearsDisplay = collegeYears.join(', ')
   const imageUrl = main_media_url ?? image
 
   return (
@@ -46,38 +45,38 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
           />
         )}
         <div className="flex justify-between items-start gap-2">
-          <h2 className="text-xl font-bold text-frosted-blue-50">{name}</h2>
+          <h2 className="text-sm sm:text-base font-bold text-frosted-blue-50">{name}</h2>
           {maxMember != null && (
-            <span className="text-sm text-charcoal-blue-300 shrink-0">
+            <span className="text-[10px] sm:text-xs text-charcoal-blue-300 shrink-0">
               {count}/{maxMember}
             </span>
           )}
         </div>
         {typeLabel && (
-          <span className="text-xs font-medium text-honeydew-900 bg-honeydew-300/90 px-2 py-1 rounded-lg w-fit">
+          <span className="text-[10px] sm:text-xs font-medium text-honeydew-900 bg-honeydew-300/90 px-1.5 py-0.5 rounded-lg w-fit">
             {typeLabel}
           </span>
         )}
         {goal && (
-          <p className="text-charcoal-blue-200">
+          <p className="text-[10px] sm:text-xs text-charcoal-blue-200">
             <span className="font-semibold text-frosted-blue-200">Зорилго:</span>{' '}
             {goal}
           </p>
         )}
-        {collegeYearLabels.length > 0 && (
-          <p className="text-sm text-charcoal-blue-300">
+        {collegeYears.length > 0 && (
+          <p className="text-[10px] sm:text-xs text-charcoal-blue-300">
             <span className="font-semibold text-frosted-blue-200">Курс:</span>{' '}
-            {collegeYearLabels.join(', ')}
+            {collegeYearsDisplay}
           </p>
         )}
         {engineerLabels.length > 0 && (
-          <p className="text-sm text-charcoal-blue-300">
+          <p className="text-[10px] sm:text-xs text-charcoal-blue-300">
             <span className="font-semibold text-frosted-blue-200">Мэргэжил:</span>{' '}
             {engineerLabels.join(', ')}
           </p>
         )}
         {(schedules.length > 0 || (whatDayOfWeek?.length > 0 || fromWhatTime)) && (
-          <div className="text-sm text-charcoal-blue-300">
+          <div className="text-[10px] sm:text-xs text-charcoal-blue-300">
             <span className="font-semibold text-frosted-blue-200">Цагийн хуваарь:</span>
             {schedules.length > 0 ? (
               <ul className="mt-1 space-y-0.5">
@@ -106,7 +105,7 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
         <button
           type="button"
           onClick={() => onSeeMore?.(club)}
-          className={`py-2 rounded-xl font-semibold bg-light-cyan-600/90 text-light-cyan-50 hover:bg-light-cyan-500/90 transition-colors shadow-sm ${showJoinButton ? 'flex-1' : 'w-full'}`}
+          className={`py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold bg-light-cyan-600/90 text-light-cyan-50 hover:bg-light-cyan-500/90 transition-colors shadow-sm ${showJoinButton ? 'flex-1' : 'w-full'}`}
         >
           Дэлгэрэнгүй
         </button>
@@ -114,7 +113,7 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
           <button
             type="button"
             disabled
-            className="flex-1 py-2 rounded-xl font-semibold bg-charcoal-blue-700 text-charcoal-blue-400 cursor-not-allowed shadow-sm"
+            className="flex-1 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold bg-charcoal-blue-700 text-charcoal-blue-400 cursor-not-allowed shadow-sm"
           >
             Хүсэлт илгээсэн
           </button>
@@ -122,7 +121,7 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
           <button
             type="button"
             onClick={() => onJoinClick?.(club)}
-            className="flex-1 py-2 rounded-xl font-semibold bg-honeydew-600 text-honeydew-50 hover:bg-honeydew-500 transition-colors shadow-sm"
+            className="flex-1 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold bg-honeydew-600 text-honeydew-50 hover:bg-honeydew-500 transition-colors shadow-sm"
           >
             Элсэх
           </button>

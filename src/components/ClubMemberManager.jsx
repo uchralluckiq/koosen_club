@@ -95,8 +95,8 @@ function ClubMemberManager({ club, user, onMemberChange }) {
 
   if (loading) {
     return (
-      <div className="rounded-2xl bg-charcoal-blue-900/60 border border-charcoal-blue-800 p-6">
-        <p className="text-charcoal-blue-300 text-center">Ачааллаж байна...</p>
+      <div className="rounded-2xl bg-charcoal-blue-900/60 border border-charcoal-blue-800 p-4 sm:p-6">
+        <p className="text-charcoal-blue-300 text-center text-sm sm:text-base">Ачааллаж байна...</p>
       </div>
     )
   }
@@ -106,8 +106,8 @@ function ClubMemberManager({ club, user, onMemberChange }) {
       {/* Join Requests Section */}
       {joinRequests.length > 0 && (
         <div className="rounded-2xl bg-charcoal-blue-900/60 border border-honeydew-600/50 overflow-hidden">
-          <div className="p-4 sm:p-5 border-b border-charcoal-blue-800 bg-honeydew-900/20">
-            <h3 className="text-lg font-semibold text-honeydew-100">
+          <div className="p-3 sm:p-5 border-b border-charcoal-blue-800 bg-honeydew-900/20">
+            <h3 className="text-sm sm:text-lg font-semibold text-honeydew-100">
               Элсэх хүсэлтүүд ({joinRequests.length})
             </h3>
           </div>
@@ -116,33 +116,33 @@ function ClubMemberManager({ club, user, onMemberChange }) {
             {joinRequests.map((request) => (
               <div
                 key={request.id}
-                className="p-4 sm:p-5 flex items-center justify-between gap-4"
+                className="p-3 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-full bg-honeydew-600 flex items-center justify-center text-white font-semibold shrink-0">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-honeydew-600 flex items-center justify-center text-white text-xs sm:text-base font-semibold shrink-0">
                     {request.name?.charAt(0).toUpperCase()}
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-frosted-blue-100 font-medium truncate">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm sm:text-base text-frosted-blue-100 font-medium truncate">
                       {request.name}
                     </p>
                     {request.email && (
-                      <p className="text-charcoal-blue-400 text-sm truncate">
+                      <p className="text-charcoal-blue-400 text-xs sm:text-sm truncate">
                         {request.email}
                       </p>
                     )}
-                    <p className="text-charcoal-blue-500 text-xs">
+                    <p className="text-charcoal-blue-500 text-[10px] sm:text-xs">
                       Огноо: {request.requested_at}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center justify-center gap-2 shrink-0">
                   <button
                     type="button"
                     onClick={() => handleApproveRequest(request.id)}
                     disabled={processing === request.id}
-                    className="px-3 py-2 rounded-lg bg-honeydew-600 text-honeydew-50 hover:bg-honeydew-500 transition-colors disabled:opacity-50 text-sm font-medium"
+                    className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-honeydew-600 text-honeydew-50 hover:bg-honeydew-500 transition-colors disabled:opacity-50 text-xs sm:text-sm font-medium"
                   >
                     {processing === request.id ? '...' : 'Зөвшөөрөх'}
                   </button>
@@ -150,7 +150,7 @@ function ClubMemberManager({ club, user, onMemberChange }) {
                     type="button"
                     onClick={() => handleRejectRequest(request.id)}
                     disabled={processing === request.id}
-                    className="px-3 py-2 rounded-lg bg-red-600/80 text-white hover:bg-red-500/80 transition-colors disabled:opacity-50 text-sm font-medium"
+                    className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-red-600/80 text-white hover:bg-red-500/80 transition-colors disabled:opacity-50 text-xs sm:text-sm font-medium"
                   >
                     {processing === request.id ? '...' : 'Татгалзах'}
                   </button>
@@ -163,14 +163,14 @@ function ClubMemberManager({ club, user, onMemberChange }) {
 
       {/* Members Section */}
       <div className="rounded-2xl bg-charcoal-blue-900/60 border border-charcoal-blue-800 overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-charcoal-blue-800">
-          <h3 className="text-lg font-semibold text-frosted-blue-100">
+        <div className="p-3 sm:p-5 border-b border-charcoal-blue-800">
+          <h3 className="text-sm sm:text-lg font-semibold text-frosted-blue-100">
             Гишүүдийн жагсаалт ({members.length}/{club?.maximum_member || 0})
           </h3>
         </div>
 
         {members.length === 0 ? (
-          <div className="p-6 text-center text-charcoal-blue-400">
+          <div className="p-4 sm:p-6 text-center text-charcoal-blue-400 text-sm sm:text-base">
             Гишүүн байхгүй байна
           </div>
         ) : (
@@ -178,27 +178,27 @@ function ClubMemberManager({ club, user, onMemberChange }) {
             {members.map((member) => (
               <div
                 key={member.student_id}
-                className="p-4 sm:p-5 flex items-center justify-between gap-4"
+                className="p-3 sm:p-5 flex items-center justify-between gap-2 sm:gap-4"
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-full bg-light-cyan-600 flex items-center justify-center text-white font-semibold shrink-0">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-light-cyan-600 flex items-center justify-center text-white text-xs sm:text-base font-semibold shrink-0">
                     {member.name?.charAt(0).toUpperCase()}
                   </div>
                   <div className="min-w-0">
-                    <p className="text-frosted-blue-100 font-medium truncate">
+                    <p className="text-sm sm:text-base text-frosted-blue-100 font-medium truncate">
                       {member.name}
                       {member.isLeader && (
-                        <span className="ml-2 text-xs bg-honeydew-600 text-honeydew-50 px-2 py-0.5 rounded-full">
+                        <span className="ml-1.5 sm:ml-2 text-[10px] sm:text-xs bg-honeydew-600 text-honeydew-50 px-1.5 sm:px-2 py-0.5 rounded-full">
                           Ахлагч
                         </span>
                       )}
                     </p>
                     {member.email && (
-                      <p className="text-charcoal-blue-400 text-sm truncate">
+                      <p className="text-charcoal-blue-400 text-xs sm:text-sm truncate">
                         {member.email}
                       </p>
                     )}
-                    <p className="text-charcoal-blue-500 text-xs">
+                    <p className="text-charcoal-blue-500 text-[10px] sm:text-xs">
                       ID: {member.student_id}
                     </p>
                   </div>
@@ -209,12 +209,12 @@ function ClubMemberManager({ club, user, onMemberChange }) {
                     type="button"
                     onClick={() => handleRemoveMember(member.student_id)}
                     disabled={removing === member.student_id}
-                    className="shrink-0 px-3 py-2 rounded-lg text-red-400 hover:bg-red-500/20 transition-colors disabled:opacity-50"
+                    className="shrink-0 p-1.5 sm:px-3 sm:py-2 rounded-lg text-red-400 hover:bg-red-500/20 transition-colors disabled:opacity-50"
                   >
                     {removing === member.student_id ? (
-                      <span className="text-sm">...</span>
+                      <span className="text-xs sm:text-sm">...</span>
                     ) : (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
                     )}

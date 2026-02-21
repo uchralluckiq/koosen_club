@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import { clubService, CLUB_TYPE_LABELS, ENGINEER_CLASS_LABELS, COLLEGE_YEAR_LABELS } from '../services/clubService'
+import { clubService, CLUB_TYPE_LABELS, ENGINEER_CLASS_LABELS } from '../services/clubService'
 import { clubTextBlockService } from '../services/clubTextBlockService'
 import { clubJoinRequestService } from '../services/clubJoinRequestService'
 import ClubTextBlock from '../components/ClubTextBlock'
 import ClubCustomizer from '../components/ClubCustomizer'
 import ClubMemberManager from '../components/ClubMemberManager'
+import ClubRoomManager from '../components/ClubRoomManager'
 
 function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
   const [club, setClub] = useState(null)
@@ -95,7 +96,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <div className="text-charcoal-blue-300">Ачааллаж байна...</div>
+        <div className="text-xs sm:text-sm text-charcoal-blue-300">Ачааллаж байна...</div>
       </div>
     )
   }
@@ -103,11 +104,11 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
   if (!club) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
-        <div className="text-charcoal-blue-300">Клуб олдсонгүй</div>
+        <div className="text-xs sm:text-sm text-charcoal-blue-300">Клуб олдсонгүй</div>
         <button
           type="button"
           onClick={onBack}
-          className="px-6 py-2 rounded-xl font-semibold border-2 border-light-cyan-400/80 text-light-cyan-100 hover:bg-light-cyan-900/40 transition-colors"
+          className="px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold border-2 border-light-cyan-400/80 text-light-cyan-100 hover:bg-light-cyan-900/40 transition-colors"
         >
           Буцах
         </button>
@@ -117,7 +118,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
 
   const typeLabel = club.type ? CLUB_TYPE_LABELS[club.type] : null
   const engineerLabels = club.engineerClasses?.map((c) => ENGINEER_CLASS_LABELS[c]).filter(Boolean) || []
-  const collegeYearLabels = club.collegeYears?.map((y) => COLLEGE_YEAR_LABELS[y]).filter(Boolean) || []
+  const collegeYearsDisplay = club.collegeYears?.join(', ') || ''
 
   return (
     <div className="flex-1 min-h-0 flex flex-col">
@@ -133,7 +134,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              <span>Буцах</span>
+              <span className="text-xs sm:text-sm">Буцах</span>
             </button>
 
             {canEdit && (
@@ -144,7 +145,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                     setEditMode(!editMode)
                     if (!editMode) setEditTab('info')
                   }}
-                  className={`px-4 py-2 rounded-xl font-medium transition-colors ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-colors ${
                     editMode
                       ? 'bg-honeydew-600 text-honeydew-50'
                       : 'bg-charcoal-blue-800 text-charcoal-blue-200 hover:text-frosted-blue-100'
@@ -162,7 +163,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
               <button
                 type="button"
                 onClick={() => setEditTab('info')}
-                className={`flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors ${
+                className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   editTab === 'info'
                     ? 'bg-light-cyan-600 text-white'
                     : 'text-charcoal-blue-300 hover:text-frosted-blue-100 hover:bg-charcoal-blue-800'
@@ -173,7 +174,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
               <button
                 type="button"
                 onClick={() => setEditTab('members')}
-                className={`flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors ${
+                className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   editTab === 'members'
                     ? 'bg-light-cyan-600 text-white'
                     : 'text-charcoal-blue-300 hover:text-frosted-blue-100 hover:bg-charcoal-blue-800'
@@ -181,12 +182,28 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
               >
                 Гишүүд удирдах
               </button>
+              <button
+                type="button"
+                onClick={() => setEditTab('room')}
+                className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
+                  editTab === 'room'
+                    ? 'bg-light-cyan-600 text-white'
+                    : 'text-charcoal-blue-300 hover:text-frosted-blue-100 hover:bg-charcoal-blue-800'
+                }`}
+              >
+                Хичээллэх анги
+              </button>
             </div>
           )}
 
           {/* Member management tab content */}
           {editMode && editTab === 'members' && (
             <ClubMemberManager club={club} user={user} onMemberChange={loadClubData} />
+          )}
+
+          {/* Room tab content */}
+          {editMode && editTab === 'room' && (
+            <ClubRoomManager club={club} onRoomChange={loadClubData} />
           )}
 
           {/* Club info tab content (default view) */}
@@ -215,11 +232,11 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
             <div className="p-5 sm:p-6 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-frosted-blue-50">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-frosted-blue-50">
                     {club.name}
                   </h1>
                   {typeLabel && (
-                    <span className="inline-block mt-2 text-xs font-medium text-honeydew-900 bg-honeydew-300/90 px-2 py-1 rounded-lg">
+                    <span className="inline-block mt-2 text-[10px] sm:text-xs font-medium text-honeydew-900 bg-honeydew-300/90 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg">
                       {typeLabel}
                     </span>
                   )}
@@ -235,21 +252,21 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <span>Тохиргоо</span>
+                    <span className="text-xs sm:text-sm">Тохиргоо</span>
                   </button>
                 )}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
                 <div className="space-y-2">
                   <p className="text-charcoal-blue-300">
                     <span className="font-semibold text-frosted-blue-200">Гишүүд:</span>{' '}
                     {club.memberCount ?? 0}/{club.maximum_member}
                   </p>
-                  {collegeYearLabels.length > 0 && (
+                  {collegeYearsDisplay && (
                     <p className="text-charcoal-blue-300">
                       <span className="font-semibold text-frosted-blue-200">Курс:</span>{' '}
-                      {collegeYearLabels.join(', ')}
+                      {collegeYearsDisplay}
                     </p>
                   )}
                   {engineerLabels.length > 0 && (
@@ -262,7 +279,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
 
                 {club.schedules?.length > 0 && (
                   <div>
-                    <p className="font-semibold text-frosted-blue-200 mb-1">Цагийн хуваарь:</p>
+                    <p className="text-xs sm:text-sm font-semibold text-frosted-blue-200 mb-1">Цагийн хуваарь:</p>
                     <ul className="text-charcoal-blue-300 space-y-0.5">
                       {club.schedules.map((s, i) => (
                         <li key={i}>
@@ -279,7 +296,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                 <button
                   type="button"
                   disabled
-                  className="w-full py-3 rounded-xl font-semibold bg-charcoal-blue-700 text-charcoal-blue-400 cursor-not-allowed mt-4"
+                  className="w-full py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold bg-charcoal-blue-700 text-charcoal-blue-400 cursor-not-allowed mt-4"
                 >
                   Хүсэлт илгээсэн
                 </button>
@@ -288,7 +305,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                   type="button"
                   onClick={handleJoinClub}
                   disabled={joining}
-                  className="w-full py-3 rounded-xl font-semibold bg-honeydew-600 text-honeydew-50 hover:bg-honeydew-500 transition-colors disabled:opacity-50 mt-4"
+                  className="w-full py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold bg-honeydew-600 text-honeydew-50 hover:bg-honeydew-500 transition-colors disabled:opacity-50 mt-4"
                 >
                   {joining ? 'Илгээж байна...' : 'Элсэх'}
                 </button>
@@ -312,7 +329,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
               <button
                 type="button"
                 onClick={handleAddBlock}
-                className="w-full py-4 rounded-2xl border-2 border-dashed border-charcoal-blue-700 text-charcoal-blue-400 hover:border-frosted-blue-600 hover:text-frosted-blue-300 transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3 sm:py-4 rounded-2xl border-2 border-dashed border-charcoal-blue-700 text-charcoal-blue-400 hover:border-frosted-blue-600 hover:text-frosted-blue-300 transition-colors flex items-center justify-center gap-2 text-xs sm:text-sm"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

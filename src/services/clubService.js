@@ -96,6 +96,7 @@ export const clubService = {
       leader_id: clubData.leader_id,
       main_media_url: clubData.main_media_url || null,
       main_media_type: clubData.main_media_type || "image",
+      room_id: clubData.room_id ?? null,
     };
 
     clubs.push(newClub);
@@ -238,11 +239,3 @@ export const CLUB_TYPE_LABELS = {
   education: "Боловсрол",
 };
 
-/** Курс label for Filter / display (college_year → name) */
-export const COLLEGE_YEAR_LABELS = {
-  1: "1-р",
-  2: "2-р",
-  3: "3-р",
-  4: "4-р",
-  5: "5-р",
-};

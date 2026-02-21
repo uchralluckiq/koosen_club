@@ -3,7 +3,7 @@ function Filter({ filters, setFilters }) {
     <div className="flex w-full px-4 sm:px-6 lg:px-10 pt-6 pb-4 sm:pb-6 justify-center border-b border-charcoal-blue-800 bg-charcoal-blue-900/30">
       <div className="flex gap-2 sm:gap-3 lg:gap-4 justify-center items-center flex-wrap">
         <select
-          className="rounded-xl py-2 px-3 sm:px-4 bg-charcoal-blue-800 text-frosted-blue-100 text-sm sm:text-base min-w-0 border border-charcoal-blue-700 focus:border-frosted-blue-500 outline-none"
+          className="rounded-xl py-2 px-3 sm:px-4 bg-charcoal-blue-800 text-frosted-blue-100 text-xs sm:text-sm min-w-0 border border-charcoal-blue-700 focus:border-frosted-blue-500 outline-none"
           value={filters.year || ''}
           onChange={(e) =>
             setFilters({ ...filters, year: e.target.value ? Number(e.target.value) : '' })
@@ -18,7 +18,7 @@ function Filter({ filters, setFilters }) {
         </select>
 
         <select
-          className="rounded-xl py-2 px-3 sm:px-4 bg-charcoal-blue-800 text-frosted-blue-100 text-sm sm:text-base min-w-0 border border-charcoal-blue-700 focus:border-frosted-blue-500 outline-none"
+          className="rounded-xl py-2 px-3 sm:px-4 bg-charcoal-blue-800 text-frosted-blue-100 text-xs sm:text-sm min-w-0 border border-charcoal-blue-700 focus:border-frosted-blue-500 outline-none"
           value={filters.class || ''}
           onChange={(e) => setFilters({ ...filters, class: e.target.value })}
         >
@@ -31,7 +31,7 @@ function Filter({ filters, setFilters }) {
         </select>
 
         <select
-          className="rounded-xl py-2 px-3 sm:px-4 bg-charcoal-blue-800 text-frosted-blue-100 text-sm sm:text-base min-w-0 border border-charcoal-blue-700 focus:border-frosted-blue-500 outline-none"
+          className="rounded-xl py-2 px-3 sm:px-4 bg-charcoal-blue-800 text-frosted-blue-100 text-xs sm:text-sm min-w-0 border border-charcoal-blue-700 focus:border-frosted-blue-500 outline-none"
           value={filters.type || ''}
           onChange={(e) => setFilters({ ...filters, type: e.target.value })}
         >
