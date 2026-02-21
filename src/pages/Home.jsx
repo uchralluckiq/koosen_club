@@ -1,26 +1,33 @@
-import koosenImg from '../assets/webImages/koosen.jpg'
+import { useState, useEffect } from 'react'
+import { siteAssetService } from '../services/siteAssetService'
 
 function Home({ onGoToMain, onGoToLogin, user }) {
+  const [backgroundUrl, setBackgroundUrl] = useState(null)
+
+  useEffect(() => {
+    siteAssetService.getHomeBackgroundUrl().then(setBackgroundUrl)
+  }, [])
+
   return (
     <div
-      className="min-h-screen w-full flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat relative bg-charcoal-blue-950"
-      style={{ backgroundImage: `url(${koosenImg})` }}
+      className="min-h-screen w-full flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat relative bg-main-background"
+      style={backgroundUrl ? { backgroundImage: `url(${backgroundUrl})` } : undefined}
     >
-      {/* Dark overlay – palette dark */}
-      <div className="absolute inset-0 bg-charcoal-blue-950/80" aria-hidden="true" />
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-main-background-overlay" aria-hidden="true" />
 
       <div className="relative z-10 max-w-2xl mx-auto px-6 text-center">
-        <h1 className="text-xl sm:text-2xl md:text-4xl font-bold mb-4 text-frosted-blue-50 drop-shadow-lg">
+        <h1 className="text-xl sm:text-2xl md:text-4xl font-bold mb-4 text-text-title drop-shadow-lg">
           Koosen Club
         </h1>
-        <p className="text-xs sm:text-sm md:text-base mb-8 text-charcoal-blue-100 leading-relaxed">
+        <p className="text-xs sm:text-sm md:text-base mb-8 text-text-paragraph-light leading-relaxed">
           Коосэн клубын вэб сайтад тавтай морилно уу. Энд та клубуудын мэдээлэл хайж, нэгдэж, шинэ клуб үүсгэх боломжтой.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             type="button"
             onClick={onGoToMain}
-            className="px-6 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-light-cyan-600/90 hover:bg-light-cyan-500/90 text-light-cyan-50 transition-colors shadow-sm"
+            className="px-6 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-button-primary-subtle hover:bg-button-primary-hover-subtle text-button-primary-text transition-colors shadow-sm"
           >
             Клуб хайх
           </button>
@@ -28,7 +35,7 @@ function Home({ onGoToMain, onGoToLogin, user }) {
             <button
               type="button"
               onClick={onGoToLogin}
-              className="px-6 py-2.5 rounded-xl text-xs sm:text-sm font-semibold border-2 border-light-cyan-400/80 text-light-cyan-100 hover:bg-light-cyan-900/40 transition-colors"
+              className="px-6 py-2.5 rounded-xl text-xs sm:text-sm font-semibold border-2 border-button-outline-border text-button-outline-text hover:bg-button-outline-hover transition-colors"
             >
               Нэвтрэх
             </button>

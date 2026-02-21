@@ -31,8 +31,8 @@ function App() {
 
   if (loading) {
     return (
-      <div className="app flex items-center justify-center min-h-screen bg-charcoal-blue-950">
-        <div className="text-sm sm:text-base text-frosted-blue-100">Уншиж байна...</div>
+      <div className="app flex items-center justify-center min-h-screen bg-main-background">
+        <div className="text-sm sm:text-base text-text-heading">Уншиж байна...</div>
       </div>
     )
   }

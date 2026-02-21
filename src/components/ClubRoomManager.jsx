@@ -24,18 +24,18 @@ function ClubRoomManager({ club, onRoomChange }) {
   return (
     <div className="space-y-6">
       {/* Available rooms */}
-      <div className="rounded-2xl bg-charcoal-blue-900/60 border border-charcoal-blue-800 overflow-hidden">
-        <div className="p-3 sm:p-5 border-b border-charcoal-blue-800">
-          <h3 className="text-sm sm:text-lg font-semibold text-frosted-blue-100">
+      <div className="rounded-2xl bg-block-background-muted border border-border-default overflow-hidden">
+        <div className="p-3 sm:p-5 border-b border-border-default">
+          <h3 className="text-sm sm:text-lg font-semibold text-text-heading">
             Боломжтой өрөөнүүд
           </h3>
         </div>
         {availableRooms.length === 0 ? (
-          <div className="p-4 sm:p-6 text-center text-charcoal-blue-400 text-xs sm:text-sm">
+          <div className="p-4 sm:p-6 text-center text-text-placeholder text-xs sm:text-sm">
             Боломжтой өрөө байхгүй байна
           </div>
         ) : (
-          <div className="divide-y divide-charcoal-blue-800">
+          <div className="divide-y divide-border-default">
             {availableRooms.map((room) => {
               const isSelected = club.room_id === room.id
               return (
@@ -46,15 +46,15 @@ function ClubRoomManager({ club, onRoomChange }) {
                   disabled={saving !== null}
                   className={`w-full p-3 sm:p-5 flex items-center justify-between gap-3 text-left transition-colors disabled:opacity-50 ${
                     isSelected
-                      ? 'bg-light-cyan-900/40 text-light-cyan-100'
-                      : 'hover:bg-charcoal-blue-800/60 text-charcoal-blue-200'
+                      ? 'bg-block-selected-bg text-text-selected'
+                      : 'hover:bg-block-hover text-text-paragraph'
                   }`}
                 >
                   <span className="text-xs sm:text-sm font-medium">{room.room_name}</span>
                   {saving === room.id ? (
-                    <span className="text-xs text-charcoal-blue-400">...</span>
+                    <span className="text-xs text-text-placeholder">...</span>
                   ) : isSelected ? (
-                    <span className="text-[10px] sm:text-xs bg-light-cyan-600 text-white px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] sm:text-xs bg-button-primary text-white px-2 py-0.5 rounded-full">
                       Сонгосон
                     </span>
                   ) : null}
@@ -66,25 +66,25 @@ function ClubRoomManager({ club, onRoomChange }) {
       </div>
 
       {/* Not available rooms */}
-      <div className="rounded-2xl bg-charcoal-blue-900/60 border border-charcoal-blue-800 overflow-hidden opacity-75">
-        <div className="p-3 sm:p-5 border-b border-charcoal-blue-800">
-          <h3 className="text-sm sm:text-lg font-semibold text-charcoal-blue-400">
+      <div className="rounded-2xl bg-block-background-muted border border-border-default overflow-hidden opacity-75">
+        <div className="p-3 sm:p-5 border-b border-border-default">
+          <h3 className="text-sm sm:text-lg font-semibold text-text-placeholder">
             Боломжгүй өрөөнүүд
           </h3>
         </div>
         {notAvailableRooms.length === 0 ? (
-          <div className="p-4 sm:p-6 text-center text-charcoal-blue-500 text-xs sm:text-sm">
+          <div className="p-4 sm:p-6 text-center text-text-caption text-xs sm:text-sm">
             Боломжгүй өрөө байхгүй байна
           </div>
         ) : (
-          <div className="divide-y divide-charcoal-blue-800">
+          <div className="divide-y divide-border-default">
             {notAvailableRooms.map((room) => (
               <div
                 key={room.id}
-                className="p-3 sm:p-5 flex items-center justify-between gap-3 text-charcoal-blue-500"
+                className="p-3 sm:p-5 flex items-center justify-between gap-3 text-text-caption"
               >
                 <span className="text-xs sm:text-sm">{room.room_name}</span>
-                <span className="text-[10px] sm:text-xs text-charcoal-blue-600">Боломжгүй</span>
+                <span className="text-[10px] sm:text-xs text-text-caption-muted">Боломжгүй</span>
               </div>
             ))}
           </div>

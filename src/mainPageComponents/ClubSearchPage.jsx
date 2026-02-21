@@ -58,7 +58,7 @@ function ClubSearchPage({ onClubSelect, user, onGoToLogin }) {
     <div className="flex-1 min-h-0 flex flex-col relative">
       {/* Request sent notification */}
       {requestSent && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm bg-honeydew-600 text-honeydew-50 font-medium shadow-lg animate-fade-in">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm bg-button-green text-button-green-text font-medium shadow-lg animate-fade-in">
           Хүсэлт амжилттай илгээгдлээ!
         </div>
       )}
@@ -66,7 +66,7 @@ function ClubSearchPage({ onClubSelect, user, onGoToLogin }) {
       <Filter filters={filters} setFilters={setFilters} />
       <section className="flex-1 min-h-0 flex flex-col py-6">
         {loading ? (
-          <div className="flex justify-center items-center py-12 text-xs sm:text-sm text-charcoal-blue-300 px-4 sm:px-6">
+          <div className="flex justify-center items-center py-12 text-xs sm:text-sm text-text-muted px-4 sm:px-6">
             Ачааллаж байна...
           </div>
         ) : (

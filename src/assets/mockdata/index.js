@@ -13,3 +13,4 @@ export { classSubjects } from "./classInfo/classSubjects";
 export { subjectSchedules } from "./classInfo/subjectSchedules";
 export { users } from "./users";
 export { rooms } from "./rooms";
+export { siteAssets } from "./siteAssets";

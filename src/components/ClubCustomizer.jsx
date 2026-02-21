@@ -36,15 +36,15 @@ function ClubCustomizer({ club, onUpdate, onClose }) {
         aria-hidden="true"
       />
 
-      <div className="relative w-full max-w-lg bg-slate-blue-950 rounded-2xl border border-charcoal-blue-800 p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+      <div className="relative w-full max-w-lg bg-nav-background rounded-2xl border border-border-default p-6 shadow-xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-base sm:text-xl font-semibold text-frosted-blue-100">
+          <h2 className="text-base sm:text-xl font-semibold text-text-heading">
             Клубын мэдээлэл засах
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-lg text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+            className="p-2 rounded-lg text-text-paragraph hover:bg-input-background hover:text-text-heading transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -54,25 +54,25 @@ function ClubCustomizer({ club, onUpdate, onClose }) {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-frosted-blue-200 mb-2">
+            <label className="block text-xs sm:text-sm font-medium text-text-label mb-2">
               Клубын нэр
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500 placeholder-charcoal-blue-400"
+              className="w-full rounded-xl border border-border-input bg-input-background text-text-title text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-focus-ring placeholder-text-placeholder"
             />
           </div>
 
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-frosted-blue-200 mb-2">
+            <label className="block text-xs sm:text-sm font-medium text-text-label mb-2">
               Төрөл
             </label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="w-full rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500"
+              className="w-full rounded-xl border border-border-input bg-input-background text-text-title text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-focus-ring"
             >
               {Object.entries(CLUB_TYPE_LABELS).map(([key, label]) => (
                 <option key={key} value={key}>
@@ -83,7 +83,7 @@ function ClubCustomizer({ club, onUpdate, onClose }) {
           </div>
 
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-frosted-blue-200 mb-2">
+            <label className="block text-xs sm:text-sm font-medium text-text-label mb-2">
               Хамгийн их гишүүн
             </label>
             <input
@@ -92,12 +92,12 @@ function ClubCustomizer({ club, onUpdate, onClose }) {
               max="100"
               value={maxMember}
               onChange={(e) => setMaxMember(Number(e.target.value))}
-              className="w-full rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500"
+              className="w-full rounded-xl border border-border-input bg-input-background text-text-title text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-focus-ring"
             />
           </div>
 
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-frosted-blue-200 mb-2">
+            <label className="block text-xs sm:text-sm font-medium text-text-label mb-2">
               Үндсэн зураг/видео URL
             </label>
             <input
@@ -105,18 +105,18 @@ function ClubCustomizer({ club, onUpdate, onClose }) {
               value={mainMediaUrl}
               onChange={(e) => setMainMediaUrl(e.target.value)}
               placeholder="https://..."
-              className="w-full rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500 placeholder-charcoal-blue-400"
+              className="w-full rounded-xl border border-border-input bg-input-background text-text-title text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-focus-ring placeholder-text-placeholder"
             />
           </div>
 
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-frosted-blue-200 mb-2">
+            <label className="block text-xs sm:text-sm font-medium text-text-label mb-2">
               Медиа төрөл
             </label>
             <select
               value={mainMediaType}
               onChange={(e) => setMainMediaType(e.target.value)}
-              className="w-full rounded-xl border border-charcoal-blue-700 bg-charcoal-blue-800 text-frosted-blue-50 text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-frosted-blue-500"
+              className="w-full rounded-xl border border-border-input bg-input-background text-text-title text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-focus-ring"
             >
               <option value="image">Зураг</option>
               <option value="video">Видео</option>
@@ -124,7 +124,7 @@ function ClubCustomizer({ club, onUpdate, onClose }) {
           </div>
 
           {mainMediaUrl && (
-            <div className="rounded-xl overflow-hidden border border-charcoal-blue-700">
+            <div className="rounded-xl overflow-hidden border border-border-input">
               {mainMediaType === 'video' ? (
                 <video src={mainMediaUrl} controls className="w-full max-h-48 object-cover" />
               ) : (
@@ -139,14 +139,14 @@ function ClubCustomizer({ club, onUpdate, onClose }) {
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="flex-1 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold bg-light-cyan-600/90 text-light-cyan-50 hover:bg-light-cyan-500/90 transition-colors disabled:opacity-50"
+            className="flex-1 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold bg-button-primary-subtle text-button-primary-text hover:bg-button-primary-hover-subtle transition-colors disabled:opacity-50"
           >
             {saving ? 'Хадгалж байна...' : 'Хадгалах'}
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold border-2 border-charcoal-blue-600 text-charcoal-blue-200 hover:bg-charcoal-blue-800 transition-colors"
+            className="flex-1 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold border-2 border-border-secondary text-text-paragraph hover:bg-input-background transition-colors"
           >
             Цуцлах
           </button>

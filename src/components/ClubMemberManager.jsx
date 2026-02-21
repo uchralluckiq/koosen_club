@@ -95,8 +95,8 @@ function ClubMemberManager({ club, user, onMemberChange }) {
 
   if (loading) {
     return (
-      <div className="rounded-2xl bg-charcoal-blue-900/60 border border-charcoal-blue-800 p-4 sm:p-6">
-        <p className="text-charcoal-blue-300 text-center text-sm sm:text-base">Ачааллаж байна...</p>
+      <div className="rounded-2xl bg-block-background-muted border border-border-default p-4 sm:p-6">
+        <p className="text-text-muted text-center text-sm sm:text-base">Ачааллаж байна...</p>
       </div>
     )
   }
@@ -105,33 +105,33 @@ function ClubMemberManager({ club, user, onMemberChange }) {
     <div className="space-y-6">
       {/* Join Requests Section */}
       {joinRequests.length > 0 && (
-        <div className="rounded-2xl bg-charcoal-blue-900/60 border border-honeydew-600/50 overflow-hidden">
-          <div className="p-3 sm:p-5 border-b border-charcoal-blue-800 bg-honeydew-900/20">
-            <h3 className="text-sm sm:text-lg font-semibold text-honeydew-100">
+        <div className="rounded-2xl bg-block-background-muted border border-border-accent overflow-hidden">
+          <div className="p-3 sm:p-5 border-b border-border-default bg-block-header-accent">
+            <h3 className="text-sm sm:text-lg font-semibold text-text-heading-accent">
               Элсэх хүсэлтүүд ({joinRequests.length})
             </h3>
           </div>
 
-          <div className="divide-y divide-charcoal-blue-800">
+          <div className="divide-y divide-border-default">
             {joinRequests.map((request) => (
               <div
                 key={request.id}
                 className="p-3 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
               >
                 <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-honeydew-600 flex items-center justify-center text-white text-xs sm:text-base font-semibold shrink-0">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-button-green flex items-center justify-center text-white text-xs sm:text-base font-semibold shrink-0">
                     {request.name?.charAt(0).toUpperCase()}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm sm:text-base text-frosted-blue-100 font-medium truncate">
+                    <p className="text-sm sm:text-base text-text-heading font-medium truncate">
                       {request.name}
                     </p>
                     {request.email && (
-                      <p className="text-charcoal-blue-400 text-xs sm:text-sm truncate">
+                      <p className="text-text-placeholder text-xs sm:text-sm truncate">
                         {request.email}
                       </p>
                     )}
-                    <p className="text-charcoal-blue-500 text-[10px] sm:text-xs">
+                    <p className="text-text-caption text-[10px] sm:text-xs">
                       Огноо: {request.requested_at}
                     </p>
                   </div>
@@ -142,7 +142,7 @@ function ClubMemberManager({ club, user, onMemberChange }) {
                     type="button"
                     onClick={() => handleApproveRequest(request.id)}
                     disabled={processing === request.id}
-                    className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-honeydew-600 text-honeydew-50 hover:bg-honeydew-500 transition-colors disabled:opacity-50 text-xs sm:text-sm font-medium"
+                    className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-button-green text-button-green-text hover:bg-button-green-hover transition-colors disabled:opacity-50 text-xs sm:text-sm font-medium"
                   >
                     {processing === request.id ? '...' : 'Зөвшөөрөх'}
                   </button>
@@ -162,43 +162,43 @@ function ClubMemberManager({ club, user, onMemberChange }) {
       )}
 
       {/* Members Section */}
-      <div className="rounded-2xl bg-charcoal-blue-900/60 border border-charcoal-blue-800 overflow-hidden">
-        <div className="p-3 sm:p-5 border-b border-charcoal-blue-800">
-          <h3 className="text-sm sm:text-lg font-semibold text-frosted-blue-100">
+      <div className="rounded-2xl bg-block-background-muted border border-border-default overflow-hidden">
+        <div className="p-3 sm:p-5 border-b border-border-default">
+          <h3 className="text-sm sm:text-lg font-semibold text-text-heading">
             Гишүүдийн жагсаалт ({members.length}/{club?.maximum_member || 0})
           </h3>
         </div>
 
         {members.length === 0 ? (
-          <div className="p-4 sm:p-6 text-center text-charcoal-blue-400 text-sm sm:text-base">
+          <div className="p-4 sm:p-6 text-center text-text-placeholder text-sm sm:text-base">
             Гишүүн байхгүй байна
           </div>
         ) : (
-          <div className="divide-y divide-charcoal-blue-800">
+          <div className="divide-y divide-border-default">
             {members.map((member) => (
               <div
                 key={member.student_id}
                 className="p-3 sm:p-5 flex items-center justify-between gap-2 sm:gap-4"
               >
                 <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-light-cyan-600 flex items-center justify-center text-white text-xs sm:text-base font-semibold shrink-0">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-button-primary flex items-center justify-center text-white text-xs sm:text-base font-semibold shrink-0">
                     {member.name?.charAt(0).toUpperCase()}
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm sm:text-base text-frosted-blue-100 font-medium truncate">
+                    <p className="text-sm sm:text-base text-text-heading font-medium truncate">
                       {member.name}
                       {member.isLeader && (
-                        <span className="ml-1.5 sm:ml-2 text-[10px] sm:text-xs bg-honeydew-600 text-honeydew-50 px-1.5 sm:px-2 py-0.5 rounded-full">
+                        <span className="ml-1.5 sm:ml-2 text-[10px] sm:text-xs bg-button-green text-button-green-text px-1.5 sm:px-2 py-0.5 rounded-full">
                           Ахлагч
                         </span>
                       )}
                     </p>
                     {member.email && (
-                      <p className="text-charcoal-blue-400 text-xs sm:text-sm truncate">
+                      <p className="text-text-placeholder text-xs sm:text-sm truncate">
                         {member.email}
                       </p>
                     )}
-                    <p className="text-charcoal-blue-500 text-[10px] sm:text-xs">
+                    <p className="text-text-caption text-[10px] sm:text-xs">
                       ID: {member.student_id}
                     </p>
                   </div>

@@ -15,14 +15,28 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
   const [editTab, setEditTab] = useState('info')
   const [showCustomizer, setShowCustomizer] = useState(false)
   const [joining, setJoining] = useState(false)
+  const [userHasPendingRequest, setUserHasPendingRequest] = useState(false)
 
   const canEdit = clubService.canEditClub(club, user)
   const canJoin = clubService.canJoinClub(club, user)
-  const hasPendingRequest = user && club && clubService.hasPendingRequest(club.id, user.id)
+  const hasPendingRequest = user && club && (userHasPendingRequest || clubService.hasPendingRequest(club.id, user.id))
 
   useEffect(() => {
     loadClubData()
   }, [clubId])
+
+  useEffect(() => {
+    if (!user?.id || !clubId) {
+      setUserHasPendingRequest(false)
+      return
+    }
+    clubJoinRequestService.getByUserId(user.id).then((requests) => {
+      const pending = requests.some(
+        (r) => r.club_id === clubId && r.status === 'pending'
+      )
+      setUserHasPendingRequest(pending)
+    })
+  }, [user?.id, clubId])
 
   const loadClubData = async () => {
     setLoading(true)
@@ -85,6 +99,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
     setJoining(true)
     try {
       await clubJoinRequestService.sendRequest(clubId, user.id)
+      setUserHasPendingRequest(true)
       await loadClubData()
     } catch (err) {
       console.error('Failed to send join request:', err)
@@ -96,7 +111,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <div className="text-xs sm:text-sm text-charcoal-blue-300">Ачааллаж байна...</div>
+        <div className="text-xs sm:text-sm text-text-muted">Ачааллаж байна...</div>
       </div>
     )
   }
@@ -104,11 +119,11 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
   if (!club) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
-        <div className="text-xs sm:text-sm text-charcoal-blue-300">Клуб олдсонгүй</div>
+        <div className="text-xs sm:text-sm text-text-muted">Клуб олдсонгүй</div>
         <button
           type="button"
           onClick={onBack}
-          className="px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold border-2 border-light-cyan-400/80 text-light-cyan-100 hover:bg-light-cyan-900/40 transition-colors"
+          className="px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold border-2 border-button-outline-border text-button-outline-text hover:bg-button-outline-hover transition-colors"
         >
           Буцах
         </button>
@@ -129,7 +144,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
             <button
               type="button"
               onClick={onBack}
-              className="flex items-center gap-2 text-charcoal-blue-200 hover:text-frosted-blue-100 transition-colors"
+              className="flex items-center gap-2 text-text-paragraph hover:text-text-heading transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -147,8 +162,8 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                   }}
                   className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-colors ${
                     editMode
-                      ? 'bg-honeydew-600 text-honeydew-50'
-                      : 'bg-charcoal-blue-800 text-charcoal-blue-200 hover:text-frosted-blue-100'
+                      ? 'bg-button-green text-button-green-text'
+                      : 'bg-input-background text-text-paragraph hover:text-text-heading'
                   }`}
                 >
                   {editMode ? 'Засах горимоос гарах' : 'Засах'}
@@ -159,14 +174,14 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
 
           {/* Edit mode tabs navbar */}
           {editMode && (
-            <div className="rounded-xl bg-charcoal-blue-900/80 border border-charcoal-blue-800 p-1 flex gap-1">
+            <div className="rounded-xl bg-block-background-strong border border-border-default p-1 flex gap-1">
               <button
                 type="button"
                 onClick={() => setEditTab('info')}
                 className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   editTab === 'info'
-                    ? 'bg-light-cyan-600 text-white'
-                    : 'text-charcoal-blue-300 hover:text-frosted-blue-100 hover:bg-charcoal-blue-800'
+                    ? 'bg-button-primary text-white'
+                    : 'text-text-muted hover:text-text-heading hover:bg-input-background'
                 }`}
               >
                 Клубын мэдээлэл
@@ -176,8 +191,8 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                 onClick={() => setEditTab('members')}
                 className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   editTab === 'members'
-                    ? 'bg-light-cyan-600 text-white'
-                    : 'text-charcoal-blue-300 hover:text-frosted-blue-100 hover:bg-charcoal-blue-800'
+                    ? 'bg-button-primary text-white'
+                    : 'text-text-muted hover:text-text-heading hover:bg-input-background'
                 }`}
               >
                 Гишүүд удирдах
@@ -187,8 +202,8 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                 onClick={() => setEditTab('room')}
                 className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   editTab === 'room'
-                    ? 'bg-light-cyan-600 text-white'
-                    : 'text-charcoal-blue-300 hover:text-frosted-blue-100 hover:bg-charcoal-blue-800'
+                    ? 'bg-button-primary text-white'
+                    : 'text-text-muted hover:text-text-heading hover:bg-input-background'
                 }`}
               >
                 Хичээллэх анги
@@ -210,7 +225,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
           {(!editMode || editTab === 'info') && (
             <>
           {/* Club main info card */}
-          <div className="rounded-2xl bg-charcoal-blue-900/60 border border-charcoal-blue-800 overflow-hidden">
+          <div className="rounded-2xl bg-block-background-muted border border-border-default overflow-hidden">
             {club.main_media_url && (
               <div className="w-full h-48 sm:h-64">
                 {club.main_media_type === 'video' ? (
@@ -232,11 +247,11 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
             <div className="p-5 sm:p-6 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                 <div>
-                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-frosted-blue-50">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-text-title">
                     {club.name}
                   </h1>
                   {typeLabel && (
-                    <span className="inline-block mt-2 text-[10px] sm:text-xs font-medium text-honeydew-900 bg-honeydew-300/90 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg">
+                    <span className="inline-block mt-2 text-[10px] sm:text-xs font-medium text-badge-type-text bg-badge-type-bg px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg">
                       {typeLabel}
                     </span>
                   )}
@@ -246,7 +261,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                   <button
                     type="button"
                     onClick={() => setShowCustomizer(true)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-charcoal-blue-800 text-charcoal-blue-200 hover:text-frosted-blue-100 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-input-background text-text-paragraph hover:text-text-heading transition-colors"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -259,19 +274,19 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
                 <div className="space-y-2">
-                  <p className="text-charcoal-blue-300">
-                    <span className="font-semibold text-frosted-blue-200">Гишүүд:</span>{' '}
+                  <p className="text-text-muted">
+                    <span className="font-semibold text-text-label">Гишүүд:</span>{' '}
                     {club.memberCount ?? 0}/{club.maximum_member}
                   </p>
                   {collegeYearsDisplay && (
-                    <p className="text-charcoal-blue-300">
-                      <span className="font-semibold text-frosted-blue-200">Курс:</span>{' '}
+                    <p className="text-text-muted">
+                      <span className="font-semibold text-text-label">Курс:</span>{' '}
                       {collegeYearsDisplay}
                     </p>
                   )}
                   {engineerLabels.length > 0 && (
-                    <p className="text-charcoal-blue-300">
-                      <span className="font-semibold text-frosted-blue-200">Мэргэжил:</span>{' '}
+                    <p className="text-text-muted">
+                      <span className="font-semibold text-text-label">Мэргэжил:</span>{' '}
                       {engineerLabels.join(', ')}
                     </p>
                   )}
@@ -279,8 +294,8 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
 
                 {club.schedules?.length > 0 && (
                   <div>
-                    <p className="text-xs sm:text-sm font-semibold text-frosted-blue-200 mb-1">Цагийн хуваарь:</p>
-                    <ul className="text-charcoal-blue-300 space-y-0.5">
+                    <p className="text-xs sm:text-sm font-semibold text-text-label mb-1">Цагийн хуваарь:</p>
+                    <ul className="text-text-muted space-y-0.5">
                       {club.schedules.map((s, i) => (
                         <li key={i}>
                           {s.day_of_week} {s.start_time}–{s.end_time}
@@ -296,7 +311,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                 <button
                   type="button"
                   disabled
-                  className="w-full py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold bg-charcoal-blue-700 text-charcoal-blue-400 cursor-not-allowed mt-4"
+                  className="w-full py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold bg-button-disabled text-text-placeholder cursor-not-allowed mt-4"
                 >
                   Хүсэлт илгээсэн
                 </button>
@@ -305,7 +320,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                   type="button"
                   onClick={handleJoinClub}
                   disabled={joining}
-                  className="w-full py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold bg-honeydew-600 text-honeydew-50 hover:bg-honeydew-500 transition-colors disabled:opacity-50 mt-4"
+                  className="w-full py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold bg-button-green text-button-green-text hover:bg-button-green-hover transition-colors disabled:opacity-50 mt-4"
                 >
                   {joining ? 'Илгээж байна...' : 'Элсэх'}
                 </button>
@@ -329,7 +344,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
               <button
                 type="button"
                 onClick={handleAddBlock}
-                className="w-full py-3 sm:py-4 rounded-2xl border-2 border-dashed border-charcoal-blue-700 text-charcoal-blue-400 hover:border-frosted-blue-600 hover:text-frosted-blue-300 transition-colors flex items-center justify-center gap-2 text-xs sm:text-sm"
+                className="w-full py-3 sm:py-4 rounded-2xl border-2 border-dashed border-border-add-block text-text-add-block hover:border-border-add-block-hover hover:text-text-add-block-hover transition-colors flex items-center justify-center gap-2 text-xs sm:text-sm"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

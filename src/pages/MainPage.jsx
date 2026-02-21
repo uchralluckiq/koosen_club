@@ -1,14 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ClubSearchPage from '../mainPageComponents/ClubSearchPage'
 import ClubDetailPage from '../mainPageComponents/ClubDetailPage'
 import TimeSchedulePage from '../mainPageComponents/TimeSchedulePage'
-import koosenLogo from '../assets/webImages/koosenLogo.png'
+import { siteAssetService } from '../services/siteAssetService'
 
 function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [accountPanelOpen, setAccountPanelOpen] = useState(false)
   const [secondaryPage, setSecondaryPage] = useState('clubs')
   const [selectedClubId, setSelectedClubId] = useState(null)
+  const [logoUrl, setLogoUrl] = useState(null)
+
+  useEffect(() => {
+    siteAssetService.getLogoUrl().then(setLogoUrl)
+  }, [])
 
   const closeMenu = () => setMenuOpen(false)
   const closeAccountPanel = () => setAccountPanelOpen(false)
@@ -31,7 +36,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
           onGoToHome?.()
           closeMenu()
         }}
-        className="rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+        className="rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-text-paragraph hover:bg-input-background hover:text-text-heading transition-colors"
       >
         Нүүр
       </button>
@@ -43,8 +48,8 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         }}
         className={`rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-colors ${
           secondaryPage === 'clubs'
-            ? 'text-frosted-blue-200 bg-charcoal-blue-800/80'
-            : 'text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100'
+            ? 'text-text-label bg-nav-active'
+            : 'text-text-paragraph hover:bg-input-background hover:text-text-heading'
         }`}
       >
         Клуб хайх
@@ -57,8 +62,8 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         }}
         className={`rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-colors ${
           secondaryPage === 'schedule'
-            ? 'text-frosted-blue-200 bg-charcoal-blue-800/80'
-            : 'text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100'
+            ? 'text-text-label bg-nav-active'
+            : 'text-text-paragraph hover:bg-input-background hover:text-text-heading'
         }`}
       >
         Цагийн хуваарь
@@ -73,9 +78,9 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         setAccountPanelOpen((o) => !o)
         closeMenu()
       }}
-      className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+      className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-text-paragraph hover:bg-input-background hover:text-text-heading transition-colors"
     >
-      <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-light-cyan-600 flex items-center justify-center text-white text-xs sm:text-sm font-semibold">
+      <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-button-primary flex items-center justify-center text-white text-xs sm:text-sm font-semibold">
         {user.name?.charAt(0).toUpperCase()}
       </div>
       <span>{user.name}</span>
@@ -87,14 +92,14 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         onGoToLogin?.()
         closeMenu()
       }}
-      className="rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+      className="rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-text-paragraph hover:bg-input-background hover:text-text-heading transition-colors"
     >
       Нэвтрэх
     </button>
   )
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden bg-charcoal-blue-950">
+    <div className="flex h-screen w-full flex-col overflow-hidden bg-main-background">
       {/* Mobile menu overlay – on top when open */}
       {menuOpen && (
         <div
@@ -111,7 +116,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
           w-64 h-full
           p-4
           flex flex-col gap-2
-          bg-slate-blue-950
+          bg-nav-background
           z-50
           md:hidden
           transform transition-transform duration-300 ease-in-out
@@ -119,12 +124,12 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
           shadow-xl
         `}
       >
-        <div className="flex justify-between items-center border-b border-charcoal-blue-800 pb-3 mb-2">
-          <span className="text-sm sm:text-lg font-semibold text-frosted-blue-100">Цэс</span>
+        <div className="flex justify-between items-center border-b border-border-default pb-3 mb-2">
+          <span className="text-sm sm:text-lg font-semibold text-text-heading">Цэс</span>
           <button
             type="button"
             onClick={closeMenu}
-            className="p-2 rounded-lg text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+            className="p-2 rounded-lg text-text-paragraph hover:bg-input-background hover:text-text-heading transition-colors"
             aria-label="Цэс хаах"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,21 +155,21 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         className={`
           fixed top-0 left-0 right-0
           p-4
-          bg-slate-blue-950
+          bg-nav-background
           z-50
           transform transition-transform duration-300 ease-in-out
           ${accountPanelOpen ? 'translate-y-0' : '-translate-y-full'}
           shadow-xl
-          border-b border-charcoal-blue-800
+          border-b border-border-default
         `}
       >
         <div className="max-w-md mx-auto">
           <div className="flex justify-between items-center mb-4">
-            <span className="text-sm sm:text-lg font-semibold text-frosted-blue-100">Хэрэглэгч</span>
+            <span className="text-sm sm:text-lg font-semibold text-text-heading">Хэрэглэгч</span>
             <button
               type="button"
               onClick={closeAccountPanel}
-              className="p-2 rounded-lg text-charcoal-blue-200 hover:bg-charcoal-blue-800 hover:text-frosted-blue-100 transition-colors"
+              className="p-2 rounded-lg text-text-paragraph hover:bg-input-background hover:text-text-heading transition-colors"
               aria-label="Хаах"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,14 +180,14 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
 
           {user && (
             <div className="space-y-4">
-              <div className="flex items-center gap-4 p-3 rounded-xl bg-charcoal-blue-900/60 border border-charcoal-blue-800">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-light-cyan-600 flex items-center justify-center text-white text-base sm:text-xl font-semibold">
+              <div className="flex items-center gap-4 p-3 rounded-xl bg-block-background-muted border border-border-default">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-button-primary flex items-center justify-center text-white text-base sm:text-xl font-semibold">
                   {user.name?.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <p className="text-frosted-blue-100 text-sm sm:text-base font-medium">{user.name}</p>
-                  <p className="text-charcoal-blue-400 text-xs sm:text-sm">{user.email}</p>
-                  <p className="text-charcoal-blue-500 text-[10px] sm:text-xs capitalize">{user.role}</p>
+                  <p className="text-text-heading text-sm sm:text-base font-medium">{user.name}</p>
+                  <p className="text-text-placeholder text-xs sm:text-sm">{user.email}</p>
+                  <p className="text-text-caption text-[10px] sm:text-xs capitalize">{user.role}</p>
                 </div>
               </div>
 
@@ -202,11 +207,11 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
       </div>
 
       {/* Top navbar bar (logo + center nav + login right + hamburger) */}
-      <header className="sticky top-0 z-30 shrink-0 border-b border-charcoal-blue-800 bg-slate-blue-950/95 backdrop-blur-sm">
+      <header className="sticky top-0 z-30 shrink-0 border-b border-border-default bg-nav-background/95 backdrop-blur-sm">
         <div className="flex h-14 items-center w-full px-4 sm:px-6">
           <div className="flex items-center gap-2 flex-shrink-0">
-            <img src={koosenLogo} alt="" className="h-6 sm:h-8 w-auto" aria-hidden="true" />
-            <span className="text-sm sm:text-lg font-semibold text-frosted-blue-100">Koosen Club</span>
+            {logoUrl && <img src={logoUrl} alt="" className="h-5 sm:h-6 w-auto" aria-hidden="true" />}
+            <span className="text-sm sm:text-lg font-semibold text-text-heading">Koosen Club</span>
           </div>
 
           {/* Mobile: spacer to push menu button to the right */}
@@ -226,7 +231,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
           <button
             type="button"
             onClick={() => setMenuOpen((o) => !o)}
-            className="md:hidden p-2 rounded-lg text-frosted-blue-100 hover:bg-charcoal-blue-800 transition-colors"
+            className="md:hidden p-2 rounded-lg text-text-heading hover:bg-input-background transition-colors"
             aria-expanded={menuOpen}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
