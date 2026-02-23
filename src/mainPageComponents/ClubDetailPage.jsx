@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { clubService, CLUB_TYPE_LABELS, ENGINEER_CLASS_LABELS } from '../services/clubService'
 import { clubTextBlockService } from '../services/clubTextBlockService'
 import { clubJoinRequestService } from '../services/clubJoinRequestService'
+import { clubScheduleDays } from '../assets/mockdata/clubsInfo/clubScheduleDay'
 import ClubTextBlock from '../components/ClubTextBlock'
 import ClubCustomizer from '../components/ClubCustomizer'
 import ClubMemberManager from '../components/ClubMemberManager'
@@ -132,8 +133,12 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
   }
 
   const typeLabel = club.type ? CLUB_TYPE_LABELS[club.type] : null
-  const engineerLabels = club.engineerClasses?.map((c) => ENGINEER_CLASS_LABELS[c]).filter(Boolean) || []
-  const collegeYearsDisplay = club.collegeYears?.join(', ') || ''
+  const engineerLabels = club.engineerClasses?.map((c) =>
+    ENGINEER_CLASS_LABELS[Number(c)] != null ? ENGINEER_CLASS_LABELS[Number(c)] : c
+  ).filter(Boolean) || []
+  const collegeYearsDisplay = club.collegeYears?.map((y) =>
+    y === 'Бүх курс' || (typeof y === 'string' && isNaN(Number(y))) ? y : `${y}-р`
+  ).join(', ') || ''
 
   return (
     <div className="flex-1 min-h-0 flex flex-col">
@@ -261,13 +266,13 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                   <button
                     type="button"
                     onClick={() => setShowCustomizer(true)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-input-background text-text-paragraph hover:text-text-heading transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-button-primary/60 bg-button-primary/15 text-button-primary hover:bg-button-primary/25 hover:border-button-primary hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <span className="text-xs sm:text-sm">Тохиргоо</span>
+                    <span className="text-xs sm:text-sm font-semibold">Клубийн мэдээлэл засах</span>
                   </button>
                 )}
               </div>
@@ -292,16 +297,30 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                   )}
                 </div>
 
-                {club.schedules?.length > 0 && (
-                  <div>
-                    <p className="text-xs sm:text-sm font-semibold text-text-label mb-1">Цагийн хуваарь:</p>
-                    <ul className="text-text-muted space-y-0.5">
-                      {club.schedules.map((s, i) => (
-                        <li key={i}>
-                          {s.day_of_week} {s.start_time}–{s.end_time}
-                        </li>
-                      ))}
-                    </ul>
+                {((club.schedules?.length > 0) || (club?.id && clubScheduleDays.filter((d) => d.club_id === club.id && d.day_of_week != null).length > 0)) && (
+                  <div className="text-text-muted space-y-0.5">
+                    {club.schedules?.length > 0 ? (
+                      <>
+                        <p>
+                          <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
+                          {[...new Set(club.schedules.map((s) => s.day_of_week))].join(', ')}
+                        </p>
+                        {(club.schedules[0]?.start_time || club.schedules[0]?.end_time) && (
+                          <p>
+                            <span className="font-semibold text-text-label">Хичээллэх цаг:</span>{' '}
+                            {club.schedules[0].start_time || '–'}–{club.schedules[0].end_time || '–'}
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <p>
+                        <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
+                        {clubScheduleDays
+                          .filter((d) => d.club_id === club.id && d.day_of_week != null)
+                          .map((d) => d.day_of_week)
+                          .join(', ')}
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
@@ -364,6 +383,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
           club={club}
           onUpdate={handleClubUpdate}
           onClose={() => setShowCustomizer(false)}
+          onSaved={loadClubData}
         />
       )}
     </div>

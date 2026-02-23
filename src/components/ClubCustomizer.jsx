@@ -1,13 +1,37 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { clubService, CLUB_TYPE_LABELS } from '../services/clubService'
+import { clubScheduleDays } from '../assets/mockdata/clubsInfo/clubScheduleDay'
+import { clubScheduleTimes } from '../assets/mockdata/clubsInfo/clubScheduleTime'
 
-function ClubCustomizer({ club, onUpdate, onClose }) {
-  const [name, setName] = useState(club.name || '')
-  const [type, setType] = useState(club.type || 'education')
-  const [maxMember, setMaxMember] = useState(club.maximum_member || 20)
-  const [mainMediaUrl, setMainMediaUrl] = useState(club.main_media_url || '')
-  const [mainMediaType, setMainMediaType] = useState(club.main_media_type || 'image')
+const SCHEDULE_DAYS = ['Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан']
+
+function ClubCustomizer({ club, onUpdate, onClose, onSaved }) {
+  const [name, setName] = useState(club?.name || '')
+  const [type, setType] = useState(club?.type || 'education')
+  const [maxMember, setMaxMember] = useState(club?.maximum_member || 20)
+  const [mainMediaUrl, setMainMediaUrl] = useState(club?.main_media_url || '')
+  const [mainMediaType, setMainMediaType] = useState(club?.main_media_type || 'image')
+  const [scheduleDays, setScheduleDays] = useState([])
+  const [startTime, setStartTime] = useState('')
+  const [endTime, setEndTime] = useState('')
   const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    if (!club?.id) return
+    const days = clubScheduleDays
+      .filter((d) => d.club_id === club.id && d.day_of_week != null)
+      .map((d) => d.day_of_week)
+    setScheduleDays(days)
+    const time = clubScheduleTimes.find((t) => t.club_id === club.id)
+    setStartTime(time?.start_time || '')
+    setEndTime(time?.end_time || '')
+  }, [club?.id])
+
+  const toggleDay = (day) => {
+    setScheduleDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+    )
+  }
 
   const handleSave = async () => {
     setSaving(true)
@@ -19,7 +43,21 @@ function ClubCustomizer({ club, onUpdate, onClose }) {
         main_media_url: mainMediaUrl || null,
         main_media_type: mainMediaUrl ? mainMediaType : 'image',
       })
+      const oldDays = clubScheduleDays.filter((d) => d.club_id !== club.id)
+      const newDays = scheduleDays.map((day) => ({ club_id: club.id, day_of_week: day }))
+      clubScheduleDays.length = 0
+      clubScheduleDays.push(...oldDays, ...newDays)
+      const timeRow = clubScheduleTimes.find((t) => t.club_id === club.id)
+      const st = startTime || null
+      const et = endTime || null
+      if (timeRow) {
+        timeRow.start_time = st
+        timeRow.end_time = et
+      } else {
+        clubScheduleTimes.push({ club_id: club.id, start_time: st, end_time: et })
+      }
       onUpdate?.(updated)
+      onSaved?.()
       onClose?.()
     } catch (err) {
       console.error('Failed to update club:', err)
@@ -121,6 +159,53 @@ function ClubCustomizer({ club, onUpdate, onClose }) {
               <option value="image">Зураг</option>
               <option value="video">Видео</option>
             </select>
+          </div>
+
+          <div>
+            <label className="block text-xs sm:text-sm font-medium text-text-label mb-2">
+              Цагийн хуваарь – өдрүүд
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {SCHEDULE_DAYS.map((day) => (
+                <button
+                  key={day}
+                  type="button"
+                  onClick={() => toggleDay(day)}
+                  className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
+                    scheduleDays.includes(day)
+                      ? 'bg-button-primary text-button-primary-text'
+                      : 'bg-input-background text-text-muted hover:text-text-paragraph'
+                  }`}
+                >
+                  {day}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-text-label mb-2">
+                Эхлэх цаг
+              </label>
+              <input
+                type="time"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                className="w-full rounded-xl border border-border-input bg-input-background text-text-title text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-focus-ring"
+              />
+            </div>
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-text-label mb-2">
+                Дуусах цаг
+              </label>
+              <input
+                type="time"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                className="w-full rounded-xl border border-border-input bg-input-background text-text-title text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-focus-ring"
+              />
+            </div>
           </div>
 
           {mainMediaUrl && (

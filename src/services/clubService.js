@@ -93,7 +93,6 @@ export const clubService = {
       type: clubData.type || "education",
       name: clubData.name || "Шинэ клуб",
       maximum_member: clubData.maximum_member || 20,
-      leader_id: clubData.leader_id,
       main_media_url: clubData.main_media_url || null,
       main_media_type: clubData.main_media_type || "image",
       room_id: clubData.room_id ?? null,
@@ -140,7 +139,7 @@ export const clubService = {
   canEditClub: (club, user) => {
     if (!user || !club) return false;
     if (user.role === "admin") return true;
-    if (club.leader_id === user.id) return true;
+    if (clubService.isLeader(club, user.id)) return true;
     return false;
   },
 
@@ -153,7 +152,9 @@ export const clubService = {
 
   isLeader: (club, userId) => {
     if (!club || !userId) return false;
-    return club.leader_id === userId;
+    return clubMembers.some(
+      (m) => m.club_id === club.id && m.student_id === userId && m.role === "leader"
+    );
   },
 
   canJoinClub: (club, user) => {
@@ -188,7 +189,7 @@ export const clubService = {
       throw new Error("Already a member");
     }
 
-    clubMembers.push({ club_id: clubId, student_id: userId });
+    clubMembers.push({ club_id: clubId, student_id: userId, role: "member" });
     return delay({ success: true });
   },
 

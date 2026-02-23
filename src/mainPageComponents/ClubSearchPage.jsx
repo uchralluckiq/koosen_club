@@ -45,11 +45,17 @@ function ClubSearchPage({ onClubSelect, user, onGoToLogin }) {
     if (filters.type && club.type !== filters.type) return false
     if (filters.year) {
       const year = Number(filters.year)
-      if (!club.collegeYears?.includes(year)) return false
+      const matchYear = club.collegeYears?.some(
+        (y) => y === 'Бүх курс' || y === year || Number(y) === year
+      )
+      if (!matchYear) return false
     }
     if (filters.class) {
-      const engineerClass = Number(filters.class)
-      if (!club.engineerClasses?.includes(engineerClass)) return false
+      const engineerClass = filters.class // "1", "2", ...
+      const matchClass = club.engineerClasses?.some(
+        (c) => c === 'Бүх бүлэг' || String(c) === engineerClass || Number(c) === Number(engineerClass)
+      )
+      if (!matchClass) return false
     }
     return true
   })

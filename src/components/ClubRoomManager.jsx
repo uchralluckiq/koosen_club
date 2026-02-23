@@ -50,7 +50,7 @@ function ClubRoomManager({ club, onRoomChange }) {
                       : 'hover:bg-block-hover text-text-paragraph'
                   }`}
                 >
-                  <span className="text-xs sm:text-sm font-medium">{room.room_name}</span>
+                  <span className="text-xs sm:text-sm font-medium">{room.id}</span>
                   {saving === room.id ? (
                     <span className="text-xs text-text-placeholder">...</span>
                   ) : isSelected ? (
@@ -83,7 +83,7 @@ function ClubRoomManager({ club, onRoomChange }) {
                 key={room.id}
                 className="p-3 sm:p-5 flex items-center justify-between gap-3 text-text-caption"
               >
-                <span className="text-xs sm:text-sm">{room.room_name}</span>
+                <span className="text-xs sm:text-sm">{room.id}</span>
                 <span className="text-[10px] sm:text-xs text-text-caption-muted">Боломжгүй</span>
               </div>
             ))}

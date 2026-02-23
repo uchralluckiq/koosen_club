@@ -3,6 +3,7 @@ import {
   CLUB_TYPE_LABELS,
   clubService,
 } from '../services/clubService'
+import { clubScheduleDays } from '../assets/mockdata/clubsInfo/clubScheduleDay'
 
 function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
   const canJoin = clubService.canJoinClub(club, user)
@@ -30,8 +31,15 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
   const maxMember = maximum_member ?? club.maximumMember
   const count = memberCount ?? (memberIds?.length ?? 0)
   const typeLabel = type ? (CLUB_TYPE_LABELS[type] ?? type) : null
-  const engineerLabels = engineerClasses.map((c) => ENGINEER_CLASS_LABELS[c]).filter(Boolean)
-  const collegeYearsDisplay = collegeYears.join(', ')
+  const scheduleDaysForClub = clubScheduleDays.filter(
+    (d) => d.club_id === club.id && d.day_of_week != null
+  ).map((d) => d.day_of_week)
+  const engineerLabels = engineerClasses.map((c) =>
+    ENGINEER_CLASS_LABELS[Number(c)] != null ? ENGINEER_CLASS_LABELS[Number(c)] : c
+  ).filter(Boolean)
+  const collegeYearsDisplay = collegeYears.map((y) =>
+    y === 'Бүх курс' || (typeof y === 'string' && isNaN(Number(y))) ? y : `${y}-р`
+  ).join(', ')
   const imageUrl = main_media_url ?? image
 
   return (
@@ -75,25 +83,40 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
             {engineerLabels.join(', ')}
           </p>
         )}
-        {(schedules.length > 0 || (whatDayOfWeek?.length > 0 || fromWhatTime)) && (
-          <div className="text-[10px] sm:text-xs text-text-muted">
-            <span className="font-semibold text-text-label">Цагийн хуваарь:</span>
+        {(schedules.length > 0 || scheduleDaysForClub.length > 0 || (whatDayOfWeek?.length > 0 || fromWhatTime)) && (
+          <div className="text-[10px] sm:text-xs text-text-muted space-y-0.5">
             {schedules.length > 0 ? (
-              <ul className="mt-1 space-y-0.5">
-                {schedules.map((s, i) => (
-                  <li key={i}>
-                    {s.day_of_week} {s.start_time}–{s.end_time}
-                  </li>
-                ))}
-              </ul>
+              <>
+                <p>
+                  <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
+                  {[...new Set(schedules.map((s) => s.day_of_week))].join(', ')}
+                </p>
+                {(schedules[0]?.start_time || schedules[0]?.end_time) && (
+                  <p>
+                    <span className="font-semibold text-text-label">Хичээллэх цаг:</span>{' '}
+                    {schedules[0].start_time || '–'}–{schedules[0].end_time || '–'}
+                  </p>
+                )}
+              </>
+            ) : scheduleDaysForClub.length > 0 ? (
+              <>
+                <p>
+                  <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
+                  {scheduleDaysForClub.join(', ')}
+                </p>
+              </>
             ) : (
               <>
                 {whatDayOfWeek?.length > 0 && (
-                  <p className="mt-1">{whatDayOfWeek.join(', ')}</p>
+                  <p>
+                    <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
+                    {whatDayOfWeek.join(', ')}
+                  </p>
                 )}
                 {(fromWhatTime || untilWhatTime) && (
-                  <p className="mt-1">
-                    {formatTime(fromWhatTime)} – {formatTime(untilWhatTime)}
+                  <p>
+                    <span className="font-semibold text-text-label">Хичээллэх цаг:</span>{' '}
+                    {formatTime(fromWhatTime)}–{formatTime(untilWhatTime)}
                   </p>
                 )}
               </>

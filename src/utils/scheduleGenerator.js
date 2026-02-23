@@ -110,7 +110,7 @@ function placeFixedSchedules(scheduleGrid, subjectSchedules, subjects) {
           subject_id: s.subject_id,
           subject_name: subject?.subject_name ?? '',
           teacher_id: subject?.teacher_id ?? '',
-          room: subject?.room ?? '',
+          room: subject?.room_id ?? '',
           fixed: true,
           scheduleId: s.id,
         }
@@ -154,7 +154,7 @@ function tryPlaceSession(scheduleGrid, classId, subjectId, sessionLength, subjec
   if (!subject) return false
   const grid = scheduleGrid[classId]
   const teacherId = subject.teacher_id
-  const room = subject.room || ''
+  const room = subject.room_id || ''
   // Try each day, then each starting period
   for (let dayIdx = 0; dayIdx < DAYS_EN.length; dayIdx++) {
     if (hasSubjectOnDay(grid, dayIdx, subjectId)) continue

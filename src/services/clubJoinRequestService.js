@@ -91,6 +91,7 @@ export const clubJoinRequestService = {
     clubMembers.push({
       club_id: request.club_id,
       student_id: request.student_id,
+      role: "member",
     })
 
     return delay({ ...request })
