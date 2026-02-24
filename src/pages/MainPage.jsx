@@ -206,12 +206,14 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         </div>
       </div>
 
+      {/* ==================================================================================== */}
       {/* Top navbar bar (logo + center nav + login right + hamburger) */}
+      {/* ==================================================================================== */}
       <header className="sticky top-0 z-30 shrink-0 border-b border-border-default bg-nav-background/95 backdrop-blur-sm">
         <div className="flex h-14 items-center w-full px-4 sm:px-6">
           <div className="flex items-center gap-2 flex-shrink-0">
             {logoUrl && <img src={logoUrl} alt="" className="h-5 sm:h-6 w-auto" aria-hidden="true" />}
-            <span className="text-sm sm:text-lg font-semibold text-text-heading">Koosen Club</span>
+            <span className="text-sm sm:text-lg font-semibold text-text-heading">Kosen Club</span>
           </div>
 
           {/* Mobile: spacer to push menu button to the right */}

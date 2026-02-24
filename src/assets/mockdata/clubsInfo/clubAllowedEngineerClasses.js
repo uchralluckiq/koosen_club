@@ -7,7 +7,7 @@ export let clubAllowedEngineerClasses = [
   { club_id: 5, engineer_class: "Бүх бүлэг" },
   { club_id: 6, engineer_class: "Бүх бүлэг" },
   { club_id: 7, engineer_class: "Бүх бүлэг" },
-  { club_id: 8, engineer_class: "2" },
+  { club_id: 8, engineer_class: "1" },
   { club_id: 9, engineer_class: "4" },
   { club_id: 10, engineer_class: "5" },
   { club_id: 11, engineer_class: "5" },

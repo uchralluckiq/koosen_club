@@ -18,10 +18,10 @@ function Home({ onGoToMain, onGoToLogin, user }) {
 
       <div className="relative z-10 max-w-2xl mx-auto px-6 text-center">
         <h1 className="text-xl sm:text-2xl md:text-4xl font-bold mb-4 text-text-title drop-shadow-lg">
-          Koosen Club
+          КООСЭН КЛУБ
         </h1>
         <p className="text-xs sm:text-sm md:text-base mb-8 text-text-paragraph-light leading-relaxed">
-          Коосэн клубын вэб сайтад тавтай морилно уу. Энд та клубуудын мэдээлэл хайж, нэгдэж, шинэ клуб үүсгэх боломжтой.
+          Коосэн клубийн вэб сайтад тавтай морилно уу. Энд та клубүүдийн мэдээлэл хайж, нэгдэж, шинэ клуб үүсгэх боломжтой.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button

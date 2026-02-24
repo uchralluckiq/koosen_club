@@ -6,7 +6,7 @@ export let clubs = [
   { id: 4, type: "sport", name: "Воллейболын секц", maximum_member: 30, main_media_url: null, main_media_type: "image", room_id: null },
   { id: 5, type: "sport", name: "Сагсан бөмбөгийн секц", maximum_member: 24, main_media_url: null, main_media_type: "image", room_id: null },
   { id: 6, type: "education", name: "KOSEN CAD", maximum_member: 12, main_media_url: null, main_media_type: "image", room_id: null },
-  { id: 7, type: "art", name: "100-ийн ундаа Хөгжмийн клуб", maximum_member: 10, main_media_url: null, main_media_type: "image", room_id: null },
+  { id: 7, type: "art", name: "100-ийн ундаа Хөгжмийн клуб", maximum_member: 10, main_media_url: "/images/zuu_undaa.png", main_media_type: "image", room_id: null },
   { id: 8, type: "contest", name: "ДИЗАКОН КЛУБ", maximum_member: 12, main_media_url: null, main_media_type: "image", room_id: null },
   { id: 9, type: "education", name: "ГИДРОПОНИК КЛУБ", maximum_member: 7, main_media_url: null, main_media_type: "image", room_id: null },
   { id: 10, type: "education", name: "ZERO TO HERO", maximum_member: 10, main_media_url: null, main_media_type: "image", room_id: null },

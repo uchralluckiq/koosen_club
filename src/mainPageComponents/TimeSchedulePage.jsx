@@ -135,7 +135,7 @@ function TimeSchedulePage() {
 
   const classLabel = (c) => {
     const cls = classesData.find((x) => x.id === c)
-    return cls ? `${cls.college_year}-р курс ${cls.engineer_class}-р анги` : `Анги ${c}`
+    return cls ? String(cls.id) : String(c)
   }
 
   return (

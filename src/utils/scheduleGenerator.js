@@ -22,8 +22,10 @@ export function checkDistributionAcrossDays(scheduleGrid, classSubjects, subject
   const subjectById = new Map(subjects.map((s) => [s.id, s]))
   for (const className of Object.keys(scheduleGrid)) {
     const grid = scheduleGrid[className]
-    const classId = parseInt(className, 10)
-    const subjectIds = (classSubjects || []).filter((cs) => cs.class_id === classId).map((cs) => cs.subject_id)
+    const classId = className
+    const subjectIds = (classSubjects || [])
+      .filter((cs) => String(cs.class_id) === classId)
+      .map((cs) => cs.subject_id)
     for (const subjectId of subjectIds) {
       const subject = subjectById.get(subjectId)
       const repitition = subject?.repitition ?? 1
@@ -47,7 +49,7 @@ export function checkDistributionAcrossDays(scheduleGrid, classSubjects, subject
  */
 function hasTeacherConflict(scheduleGrid, dayIdx, period, teacherId, excludeClassId) {
   for (const [classKey, grid] of Object.entries(scheduleGrid)) {
-    if (parseInt(classKey, 10) === excludeClassId) continue
+    if (classKey === String(excludeClassId)) continue
     const cell = grid[dayIdx]?.[period]
     if (cell?.teacher_id === teacherId) return true
   }
@@ -59,7 +61,7 @@ function hasTeacherConflict(scheduleGrid, dayIdx, period, teacherId, excludeClas
  */
 function hasRoomConflict(scheduleGrid, dayIdx, period, room, excludeClassId) {
   for (const [classKey, grid] of Object.entries(scheduleGrid)) {
-    if (parseInt(classKey, 10) === excludeClassId) continue
+    if (classKey === String(excludeClassId)) continue
     const cell = grid[dayIdx]?.[period]
     if (cell?.room === room) return true
   }
