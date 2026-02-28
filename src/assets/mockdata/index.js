@@ -6,7 +6,6 @@ export { clubAllowedCollegeYears } from "./clubsInfo/clubAllowedCollegeYears";
 export { clubTextBlocks } from "./clubsInfo/clubTextBlocks";
 export { clubSchedules } from "./clubsInfo/clubSchedules";
 export { clubJoinRequests } from "./clubsInfo/clubJoinRequests";
-export { students } from "./classInfo/students";
 export { classes } from "./classInfo/classes";
 export { subjects } from "./classInfo/subjects";
 export { classSubjects } from "./classInfo/classSubjects";
