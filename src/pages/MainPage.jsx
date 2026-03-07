@@ -187,7 +187,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
                 <div>
                   <p className="text-text-heading text-sm sm:text-base font-medium">{user.name}</p>
                   <p className="text-text-placeholder text-xs sm:text-sm">{user.email}</p>
-                  <p className="text-text-caption text-[10px] sm:text-xs capitalize">{user.role}</p>
+                  <p className="text-text-caption text-[10px] sm:text-xs capitalize">{user.role === 1 ? 'admin' : user.role === 2 ? 'teacher' : user.role === 3 ? 'student' : user.role}</p>
                 </div>
               </div>
 

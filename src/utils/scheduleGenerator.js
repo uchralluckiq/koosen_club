@@ -97,8 +97,10 @@ function placeFixedSchedules(scheduleGrid, subjectSchedules, subjects) {
   const subjectById = new Map(subjects.map((s) => [s.id, s]))
   const fixed = (subjectSchedules || []).filter((s) => s.fixed && s.day_of_week != null && s.start_period != null)
   for (const s of fixed) {
-    const dayIdx = DAY_EN_TO_INDEX[s.day_of_week]
-    if (dayIdx == null) continue
+    const dayIdx = typeof s.day_of_week === 'number' && s.day_of_week >= 1 && s.day_of_week <= 5
+      ? s.day_of_week - 1
+      : DAY_EN_TO_INDEX[s.day_of_week]
+    if (dayIdx == null || dayIdx < 0) continue
     const classId = s.class_id
     const grid = scheduleGrid[classId]
     if (!grid) continue

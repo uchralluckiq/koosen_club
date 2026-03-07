@@ -9,8 +9,6 @@ import {
   PERIOD_COUNT,
 } from '../utils/scheduleGenerator'
 
-const DAY_ORDER = ['Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба', 'Ням']
-
 const TAB_SCHOOL = 'school'
 const TAB_CLUB = 'club'
 
@@ -61,13 +59,14 @@ function TimeSchedulePage() {
     }, {})
   }, [clubs])
 
-  const sortedDays = Object.keys(byDay).sort(
-    (a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b)
-  )
+  const sortedDays = Object.keys(byDay)
+    .map((k) => (typeof k === 'string' && /^\d+$/.test(k) ? parseInt(k, 10) : k))
+    .filter((n) => typeof n === 'number' && n >= 1 && n <= 5)
+    .sort((a, b) => a - b)
 
   const fixSlot = (classId, dayIdx, period, cell) => {
     if (!cell || cell.fixed) return
-    const dayEn = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'][dayIdx]
+    const dayOfWeek = dayIdx + 1
     const existingFixed = subjectSchedules.find(
       (s) => s.class_id === classId && s.subject_id === cell.subject_id && s.fixed
     )
@@ -79,7 +78,7 @@ function TimeSchedulePage() {
       setSubjectSchedules((prev) =>
         prev.map((s) =>
           s.id === existingFixed.id
-            ? { ...s, day_of_week: dayEn, start_period: period, fixed: true }
+            ? { ...s, day_of_week: dayOfWeek, start_period: period, fixed: true }
             : s
         )
       )
@@ -87,7 +86,7 @@ function TimeSchedulePage() {
       setSubjectSchedules((prev) =>
         prev.map((s) =>
           s.id === existingNonFixed.id
-            ? { ...s, day_of_week: dayEn, start_period: period, fixed: true }
+            ? { ...s, day_of_week: dayOfWeek, start_period: period, fixed: true }
             : s
         )
       )
@@ -99,7 +98,7 @@ function TimeSchedulePage() {
           subject_id: cell.subject_id,
           class_id: classId,
           fixed: true,
-          day_of_week: dayEn,
+          day_of_week: dayOfWeek,
           start_period: period,
         },
       ])
@@ -122,7 +121,7 @@ function TimeSchedulePage() {
               subject_id: cell.subject_id,
               class_id: classId,
               fixed: true,
-              day_of_week: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'][dayIdx],
+              day_of_week: dayIdx + 1,
               start_period: period,
             })
           }
@@ -260,7 +259,7 @@ function TimeSchedulePage() {
                     className="rounded-2xl border border-border-default bg-block-background-muted overflow-hidden"
                   >
                     <h2 className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-base font-semibold text-text-heading-schedule bg-block-header-schedule border-b border-border-default">
-                      {day}
+                      {DAYS_MN[day - 1] ?? day}
                     </h2>
                     <ul className="divide-y divide-border-default">
                       {byDay[day].map((item, i) => (

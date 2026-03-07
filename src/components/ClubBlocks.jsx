@@ -31,9 +31,12 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
   const maxMember = maximum_member ?? club.maximumMember
   const count = memberCount ?? (memberIds?.length ?? 0)
   const typeLabel = type ? (CLUB_TYPE_LABELS[type] ?? type) : null
-  const scheduleDaysForClub = clubScheduleDays.filter(
-    (d) => d.club_id === club.id && d.day_of_week != null
-  ).map((d) => d.day_of_week)
+  const DAYS_MN = ['Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан']
+  const scheduleDaysForClub = clubScheduleDays
+    .filter((d) => d.club_id === club.id && d.day_of_week != null)
+    .map((d) => (typeof d.day_of_week === 'number' && d.day_of_week >= 1 && d.day_of_week <= 5
+      ? DAYS_MN[d.day_of_week - 1]
+      : d.day_of_week))
   const engineerLabels = engineerClasses.map((c) =>
     ENGINEER_CLASS_LABELS[Number(c)] != null ? ENGINEER_CLASS_LABELS[Number(c)] : c
   ).filter(Boolean)
@@ -89,7 +92,10 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
               <>
                 <p>
                   <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
-                  {[...new Set(schedules.map((s) => s.day_of_week))].join(', ')}
+                  {[...new Set(schedules.map((s) => s.day_of_week))]
+                    .sort((a, b) => (a ?? 0) - (b ?? 0))
+                    .map((d) => (typeof d === 'number' && d >= 1 && d <= 5 ? DAYS_MN[d - 1] : d))
+                    .join(', ')}
                 </p>
                 {(schedules[0]?.start_time || schedules[0]?.end_time) && (
                   <p>

@@ -10,7 +10,6 @@ function ClubCustomizer({ club, onUpdate, onClose, onSaved }) {
   const [type, setType] = useState(club?.type || 'education')
   const [maxMember, setMaxMember] = useState(club?.maximum_member || 20)
   const [mainMediaUrl, setMainMediaUrl] = useState(club?.main_media_url || '')
-  const [mainMediaType, setMainMediaType] = useState(club?.main_media_type || 'image')
   const [scheduleDays, setScheduleDays] = useState([])
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
@@ -20,7 +19,11 @@ function ClubCustomizer({ club, onUpdate, onClose, onSaved }) {
     if (!club?.id) return
     const days = clubScheduleDays
       .filter((d) => d.club_id === club.id && d.day_of_week != null)
-      .map((d) => d.day_of_week)
+      .map((d) => {
+        const n = typeof d.day_of_week === 'number' ? d.day_of_week : Number(d.day_of_week)
+        return n >= 1 && n <= 5 ? SCHEDULE_DAYS[n - 1] : null
+      })
+      .filter(Boolean)
     setScheduleDays(days)
     const time = clubScheduleTimes.find((t) => t.club_id === club.id)
     setStartTime(time?.start_time || '')
@@ -41,10 +44,12 @@ function ClubCustomizer({ club, onUpdate, onClose, onSaved }) {
         type,
         maximum_member: maxMember,
         main_media_url: mainMediaUrl || null,
-        main_media_type: mainMediaUrl ? mainMediaType : 'image',
       })
       const oldDays = clubScheduleDays.filter((d) => d.club_id !== club.id)
-      const newDays = scheduleDays.map((day) => ({ club_id: club.id, day_of_week: day }))
+      const newDays = scheduleDays.map((day) => ({
+        club_id: club.id,
+        day_of_week: SCHEDULE_DAYS.includes(day) ? SCHEDULE_DAYS.indexOf(day) + 1 : day,
+      }))
       clubScheduleDays.length = 0
       clubScheduleDays.push(...oldDays, ...newDays)
       const timeRow = clubScheduleTimes.find((t) => t.club_id === club.id)
@@ -149,20 +154,6 @@ function ClubCustomizer({ club, onUpdate, onClose, onSaved }) {
 
           <div>
             <label className="block text-xs sm:text-sm font-medium text-text-label mb-2">
-              Медиа төрөл
-            </label>
-            <select
-              value={mainMediaType}
-              onChange={(e) => setMainMediaType(e.target.value)}
-              className="w-full rounded-xl border border-border-input bg-input-background text-text-title text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-focus-ring"
-            >
-              <option value="image">Зураг</option>
-              <option value="video">Видео</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-text-label mb-2">
               Цагийн хуваарь – өдрүүд
             </label>
             <div className="flex flex-wrap gap-2">
@@ -210,11 +201,7 @@ function ClubCustomizer({ club, onUpdate, onClose, onSaved }) {
 
           {mainMediaUrl && (
             <div className="rounded-xl overflow-hidden border border-border-input">
-              {mainMediaType === 'video' ? (
-                <video src={mainMediaUrl} controls className="w-full max-h-48 object-cover" />
-              ) : (
-                <img src={mainMediaUrl} alt="Preview" className="w-full max-h-48 object-cover" />
-              )}
+              <img src={mainMediaUrl} alt="Preview" className="w-full max-h-48 object-cover" />
             </div>
           )}
         </div>

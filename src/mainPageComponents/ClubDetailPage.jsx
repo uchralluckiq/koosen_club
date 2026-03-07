@@ -33,7 +33,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
     }
     clubJoinRequestService.getByUserId(user.id).then((requests) => {
       const pending = requests.some(
-        (r) => r.club_id === clubId && r.status === 'pending'
+        (r) => r.club_id === clubId && r.status === 1 // 1: pending
       )
       setUserHasPendingRequest(pending)
     })
@@ -233,19 +233,11 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
           <div className="rounded-2xl bg-block-background-muted border border-border-default overflow-hidden">
             {club.main_media_url && (
               <div className="w-full h-48 sm:h-64">
-                {club.main_media_type === 'video' ? (
-                  <video
-                    src={club.main_media_url}
-                    controls
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <img
-                    src={club.main_media_url}
-                    alt={club.name}
-                    className="w-full h-full object-cover"
-                  />
-                )}
+                <img
+                  src={club.main_media_url}
+                  alt={club.name}
+                  className="w-full h-full object-cover"
+                />
               </div>
             )}
 
@@ -303,7 +295,10 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                       <>
                         <p>
                           <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
-                          {[...new Set(club.schedules.map((s) => s.day_of_week))].join(', ')}
+                          {[...new Set(club.schedules.map((s) => s.day_of_week))]
+                            .sort((a, b) => a - b)
+                            .map((d) => (typeof d === 'number' && d >= 1 && d <= 5 ? ['Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан'][d - 1] : d))
+                            .join(', ')}
                         </p>
                         {(club.schedules[0]?.start_time || club.schedules[0]?.end_time) && (
                           <p>
@@ -317,7 +312,9 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                         <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
                         {clubScheduleDays
                           .filter((d) => d.club_id === club.id && d.day_of_week != null)
-                          .map((d) => d.day_of_week)
+                          .map((d) => (typeof d.day_of_week === 'number' && d.day_of_week >= 1 && d.day_of_week <= 5
+                            ? ['Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан'][d.day_of_week - 1]
+                            : d.day_of_week))
                           .join(', ')}
                       </p>
                     )}

@@ -29,7 +29,7 @@ function ClubMemberManager({ club, user, onMemberChange }) {
           ...m,
           name: userData?.name || m.student_id,
           email: userData?.email || '',
-          isLeader: m.role === 'leader',
+          isLeader: m.role === 1, // 1: leader
         }
       })
       setMembers(enrichedMembers)
@@ -77,7 +77,7 @@ function ClubMemberManager({ club, user, onMemberChange }) {
 
   const handleRemoveMember = async (studentId) => {
     const member = members.find((m) => m.student_id === studentId)
-    if (member?.role === 'leader') {
+    if (member?.role === 1) { // 1: leader
       alert('Клубын ахлагчийг хасах боломжгүй')
       return
     }
@@ -133,7 +133,7 @@ function ClubMemberManager({ club, user, onMemberChange }) {
                       </p>
                     )}
                     <p className="text-text-caption text-[10px] sm:text-xs">
-                      Огноо: {request.requested_at}
+                      Огноо: {request.requested_date ?? request.requested_at}
                     </p>
                   </div>
                 </div>

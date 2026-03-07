@@ -18,7 +18,7 @@ export const clubJoinRequestService = {
     }
 
     const requests = clubJoinRequests.filter(
-      (r) => r.club_id === clubId && r.status === 'pending'
+      (r) => r.club_id === clubId && r.status === 1 // 1: pending
     )
     return delay([...requests])
   },
@@ -37,7 +37,7 @@ export const clubJoinRequestService = {
   hasPendingRequest(clubId, userId) {
     if (!clubId || !userId) return false
     return clubJoinRequests.some(
-      (r) => r.club_id === clubId && r.student_id === userId && r.status === 'pending'
+      (r) => r.club_id === clubId && r.student_id === userId && r.status === 1 // 1: pending
     )
   },
 
@@ -53,7 +53,7 @@ export const clubJoinRequestService = {
     }
 
     if (clubJoinRequests.some(
-      (r) => r.club_id === clubId && r.student_id === userId && r.status === 'pending'
+      (r) => r.club_id === clubId && r.student_id === userId && r.status === 1 // 1: pending
     )) {
       throw new Error('Already has pending request')
     }
@@ -62,8 +62,8 @@ export const clubJoinRequestService = {
       id: nextId++,
       club_id: clubId,
       student_id: userId,
-      status: 'pending',
-      requested_at: new Date().toISOString().split('T')[0],
+      status: 1, // 1: pending
+      requested_date: new Date().toISOString().split('T')[0],
       reviewed_by: null,
     }
 
@@ -85,13 +85,13 @@ export const clubJoinRequestService = {
     const request = clubJoinRequests.find((r) => r.id === requestId)
     if (!request) throw new Error('Request not found')
 
-    request.status = 'approved'
+    request.status = 2 // 2: approved
     request.reviewed_by = reviewerId
 
     clubMembers.push({
       club_id: request.club_id,
       student_id: request.student_id,
-      role: "member",
+      role: 2, // 2: member
     })
 
     return delay({ ...request })
@@ -111,7 +111,7 @@ export const clubJoinRequestService = {
     const request = clubJoinRequests.find((r) => r.id === requestId)
     if (!request) throw new Error('Request not found')
 
-    request.status = 'rejected'
+    request.status = 3 // 3: rejected
     request.reviewed_by = reviewerId
 
     return delay({ ...request })

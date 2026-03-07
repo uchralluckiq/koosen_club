@@ -1,4 +1,3 @@
-// ===== CLUB ALLOWED CLASSES (from clubs.js allowedEngineerClass) =====
 export let clubAllowedEngineerClasses = [
   { club_id: 1, engineer_class: "Бүх бүлэг" },
   { club_id: 2, engineer_class: "Бүх бүлэг" },

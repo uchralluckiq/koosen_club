@@ -1,4 +1,3 @@
-// Joins clubScheduleDays (day_of_week) and clubScheduleTimes (start_time, end_time) for clubService.
 import { clubScheduleDays } from "./clubScheduleDay";
 import { clubScheduleTimes } from "./clubScheduleTime";
 

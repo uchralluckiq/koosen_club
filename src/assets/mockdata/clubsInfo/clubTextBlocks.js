@@ -1,4 +1,3 @@
-// ===== CLUB TEXTBLOCKS (from clubs.js textblock / explanation+goal where present) =====
 export let clubTextBlocks = [
   { id: 1, club_id: 1, title: "Таны танилцуулга", content: "Training and friendly matches to improve physical health.", media_url: null, media_type: null, order_index: 1 },
   { id: 2, club_id: 1, title: "Зорилго", content: "Build teamwork and participate in inter-college tournaments.", media_url: null, media_type: null, order_index: 2 },

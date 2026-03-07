@@ -94,7 +94,6 @@ export const clubService = {
       name: clubData.name || "Шинэ клуб",
       maximum_member: clubData.maximum_member || 20,
       main_media_url: clubData.main_media_url || null,
-      main_media_type: clubData.main_media_type || "image",
       room_id: clubData.room_id ?? null,
     };
 
@@ -138,7 +137,7 @@ export const clubService = {
 
   canEditClub: (club, user) => {
     if (!user || !club) return false;
-    if (user.role === "admin") return true;
+    if (user.role === 1) return true; // 1: admin
     if (clubService.isLeader(club, user.id)) return true;
     return false;
   },
@@ -153,14 +152,14 @@ export const clubService = {
   isLeader: (club, userId) => {
     if (!club || !userId) return false;
     return clubMembers.some(
-      (m) => m.club_id === club.id && m.student_id === userId && m.role === "leader"
+      (m) => m.club_id === club.id && m.student_id === userId && m.role === 1 // 1: leader
     );
   },
 
   canJoinClub: (club, user) => {
     if (!club) return false;
     if (!user) return true;
-    if (user.role === "admin" || user.role === "teacher") return false;
+    if (user.role === 1 || user.role === 2) return false; // 1: admin, 2: teacher
     if (clubService.isLeader(club, user.id)) return false;
     if (clubService.isMember(club.id, user.id)) return false;
     if (clubService.hasPendingRequest(club.id, user.id)) return false;
@@ -170,7 +169,7 @@ export const clubService = {
   hasPendingRequest: (clubId, userId) => {
     if (!clubId || !userId) return false;
     return clubJoinRequests.some(
-      (r) => r.club_id === clubId && r.student_id === userId && r.status === "pending"
+      (r) => r.club_id === clubId && r.student_id === userId && r.status === 1 // 1: pending
     );
   },
 
@@ -189,7 +188,7 @@ export const clubService = {
       throw new Error("Already a member");
     }
 
-    clubMembers.push({ club_id: clubId, student_id: userId, role: "member" });
+    clubMembers.push({ club_id: clubId, student_id: userId, role: 2 }); // 2: member
     return delay({ success: true });
   },
 

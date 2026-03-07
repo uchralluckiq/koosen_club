@@ -1,4 +1,3 @@
-// ===== CLASSES TABLE =====
 export let classes = [
   // id = college_year + engineer_class
   { id: "1-1", teacher_id: "TCH001", room_id: "G101" },

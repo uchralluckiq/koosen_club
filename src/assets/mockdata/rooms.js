@@ -1,4 +1,3 @@
-// ===== ROOMS TABLE =====
 export let rooms = [
   { id: "G101", allowed_for_club: false},
   { id: "G102", allowed_for_club: false},
