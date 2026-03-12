@@ -13,7 +13,6 @@ function Home({ onGoToMain, onGoToLogin, user }) {
       className="min-h-screen w-full flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat relative bg-main-background"
       style={backgroundUrl ? { backgroundImage: `url(${backgroundUrl})` } : undefined}
     >
-      {/* Dark overlay */}
       <div className="absolute inset-0 bg-main-background-overlay" aria-hidden="true" />
 
       <div className="relative z-10 max-w-2xl mx-auto px-6 text-center">

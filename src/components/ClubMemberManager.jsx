@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { clubService } from '../services/clubService'
 import { clubJoinRequestService } from '../services/clubJoinRequestService'
-import { users } from '../assets/mockdata/users'
+import { users } from '../mockdata/users'
 
 function ClubMemberManager({ club, user, onMemberChange }) {
   const [members, setMembers] = useState([])
@@ -49,6 +49,7 @@ function ClubMemberManager({ club, user, onMemberChange }) {
       setLoading(false)
     }
   }
+  // used in: useEffect([club?.id])
 
   const handleApproveRequest = async (requestId) => {
     setProcessing(requestId)
@@ -62,6 +63,7 @@ function ClubMemberManager({ club, user, onMemberChange }) {
       setProcessing(null)
     }
   }
+  // used in: Зөвшөөрөх button (join requests list)
 
   const handleRejectRequest = async (requestId) => {
     setProcessing(requestId)
@@ -74,6 +76,7 @@ function ClubMemberManager({ club, user, onMemberChange }) {
       setProcessing(null)
     }
   }
+  // used in: Татгалзах button (join requests list)
 
   const handleRemoveMember = async (studentId) => {
     const member = members.find((m) => m.student_id === studentId)
@@ -93,6 +96,7 @@ function ClubMemberManager({ club, user, onMemberChange }) {
       setRemoving(null)
     }
   }
+  // used in: remove (trash) button on each member row
 
   if (loading) {
     return (
@@ -104,7 +108,6 @@ function ClubMemberManager({ club, user, onMemberChange }) {
 
   return (
     <div className="space-y-6">
-      {/* Join Requests Section */}
       {joinRequests.length > 0 && (
         <div className="rounded-2xl bg-block-background-muted border border-border-accent overflow-hidden">
           <div className="p-3 sm:p-5 border-b border-border-default bg-block-header-accent">
@@ -162,7 +165,6 @@ function ClubMemberManager({ club, user, onMemberChange }) {
         </div>
       )}
 
-      {/* Members Section */}
       <div className="rounded-2xl bg-block-background-muted border border-border-default overflow-hidden">
         <div className="p-3 sm:p-5 border-b border-border-default">
           <h3 className="text-sm sm:text-lg font-semibold text-text-heading">

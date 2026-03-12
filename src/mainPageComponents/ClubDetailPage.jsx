@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import { clubService, CLUB_TYPE_LABELS, ENGINEER_CLASS_LABELS } from '../services/clubService'
 import { clubTextBlockService } from '../services/clubTextBlockService'
 import { clubJoinRequestService } from '../services/clubJoinRequestService'
-import { clubScheduleDays } from '../assets/mockdata/clubsInfo/clubScheduleDay'
+import { clubScheduleDays } from '../mockdata/clubsInfo/clubScheduleDay'
+import { clubScheduleTimes } from '../mockdata/clubsInfo/clubScheduleTime'
 import ClubTextBlock from '../components/ClubTextBlock'
 import ClubCustomizer from '../components/ClubCustomizer'
 import ClubMemberManager from '../components/ClubMemberManager'
 import ClubRoomManager from '../components/ClubRoomManager'
+import ConfirmModal from '../components/ConfirmModal'
 
 function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
   const [club, setClub] = useState(null)
@@ -17,8 +19,11 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
   const [showCustomizer, setShowCustomizer] = useState(false)
   const [joining, setJoining] = useState(false)
   const [userHasPendingRequest, setUserHasPendingRequest] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [showExitEditConfirm, setShowExitEditConfirm] = useState(false)
 
   const canEdit = clubService.canEditClub(club, user)
+  const canDelete = clubService.canDeleteClub(club, user)
   const canJoin = clubService.canJoinClub(club, user)
   const hasPendingRequest = user && club && (userHasPendingRequest || clubService.hasPendingRequest(club.id, user.id))
 
@@ -54,10 +59,12 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
       setLoading(false)
     }
   }
+  // used in: useEffect([clubId]), handleJoinClub, ClubCustomizer/ClubMemberManager/ClubRoomManager (onSaved/onMemberChange/onRoomChange)
 
   const handleClubUpdate = (updatedClub) => {
     setClub((prev) => ({ ...prev, ...updatedClub }))
   }
+  // used in: ClubCustomizer (onUpdate prop)
 
   const handleBlockUpdate = async (blockId, updates) => {
     try {
@@ -78,6 +85,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
       console.error('Failed to delete block:', err)
     }
   }
+  // used in: ClubTextBlock (onDelete prop)
 
   const handleAddBlock = async () => {
     try {
@@ -89,6 +97,37 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
     } catch (err) {
       console.error('Failed to add block:', err)
     }
+  }
+  // used in: "Шинэ блок нэмэх" button
+
+  const handleDeleteClubClick = () => {
+    if (club && canDelete) setShowDeleteConfirm(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (!club) return
+    setShowDeleteConfirm(false)
+    try {
+      await clubService.delete(club.id)
+      onBack?.()
+    } catch (err) {
+      console.error('Failed to delete club:', err)
+    }
+  }
+
+  const handleExitEditClick = () => {
+    setShowExitEditConfirm(true)
+  }
+
+  const handleConfirmSaveAndExit = () => {
+    setShowExitEditConfirm(false)
+    loadClubData()
+    setEditMode(false)
+  }
+
+  const handleConfirmDiscardExit = () => {
+    setShowExitEditConfirm(false)
+    setEditMode(false)
   }
 
   const handleJoinClub = async () => {
@@ -108,6 +147,7 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
       setJoining(false)
     }
   }
+  // used in: Элсэх button
 
   if (loading) {
     return (
@@ -157,13 +197,17 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
               <span className="text-xs sm:text-sm">Буцах</span>
             </button>
 
-            {canEdit && (
-              <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
+              {canEdit && (
                 <button
                   type="button"
                   onClick={() => {
-                    setEditMode(!editMode)
-                    if (!editMode) setEditTab('info')
+                    if (editMode) {
+                      handleExitEditClick()
+                    } else {
+                      setEditMode(true)
+                      setEditTab('info')
+                    }
                   }}
                   className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-colors ${
                     editMode
@@ -173,8 +217,17 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                 >
                   {editMode ? 'Засах горимоос гарах' : 'Засах'}
                 </button>
-              </div>
-            )}
+              )}
+              {canDelete && (
+                <button
+                  type="button"
+                  onClick={handleDeleteClubClick}
+                  className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-medium bg-red-600/80 text-white hover:bg-red-500/80 transition-colors"
+                >
+                  Клубыг устгах
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Edit mode tabs navbar */}
@@ -287,39 +340,48 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
                       {engineerLabels.join(', ')}
                     </p>
                   )}
+                  {club.room_id && (
+                    <p className="text-text-muted">
+                      <span className="font-semibold text-text-label">Өрөө:</span>{' '}
+                      {club.room_id}
+                    </p>
+                  )}
                 </div>
 
-                {((club.schedules?.length > 0) || (club?.id && clubScheduleDays.filter((d) => d.club_id === club.id && d.day_of_week != null).length > 0)) && (
-                  <div className="text-text-muted space-y-0.5">
-                    {club.schedules?.length > 0 ? (
+                <div className="text-text-muted space-y-0.5">
+                  {(() => {
+                    const daysFromSchedules = club.schedules?.length > 0
+                      ? [...new Set(club.schedules.map((s) => s.day_of_week))].filter((d) => d != null).sort((a, b) => a - b)
+                      : []
+                    const daysFromDays = club?.id
+                      ? clubScheduleDays.filter((d) => d.club_id === club.id && d.day_of_week != null).map((d) => d.day_of_week)
+                      : []
+                    const hasDays = daysFromSchedules.length > 0 || daysFromDays.length > 0
+                    const dayLabels = hasDays
+                      ? (daysFromSchedules.length > 0 ? daysFromSchedules : daysFromDays)
+                        .map((d) => (typeof d === 'number' && d >= 1 && d <= 5 ? ['Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан'][d - 1] : d))
+                        .join(', ')
+                      : 'тогтсон өдөр байхгүй'
+                    const timeFromSchedules = club.schedules?.[0]
+                    const timeFromTimes = club?.id ? clubScheduleTimes.find((t) => t.club_id === club.id) : null
+                    const startTime = timeFromSchedules?.start_time ?? timeFromTimes?.start_time ?? null
+                    const endTime = timeFromSchedules?.end_time ?? timeFromTimes?.end_time ?? null
+                    const hasTime = startTime != null || endTime != null
+                    const timeText = hasTime ? `${startTime || '–'}–${endTime || '–'}` : 'тогтсон цаг байхгүй'
+                    return (
                       <>
                         <p>
                           <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
-                          {[...new Set(club.schedules.map((s) => s.day_of_week))]
-                            .sort((a, b) => a - b)
-                            .map((d) => (typeof d === 'number' && d >= 1 && d <= 5 ? ['Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан'][d - 1] : d))
-                            .join(', ')}
+                          {dayLabels}
                         </p>
-                        {(club.schedules[0]?.start_time || club.schedules[0]?.end_time) && (
-                          <p>
-                            <span className="font-semibold text-text-label">Хичээллэх цаг:</span>{' '}
-                            {club.schedules[0].start_time || '–'}–{club.schedules[0].end_time || '–'}
-                          </p>
-                        )}
+                        <p>
+                          <span className="font-semibold text-text-label">Хичээллэх цаг:</span>{' '}
+                          {timeText}
+                        </p>
                       </>
-                    ) : (
-                      <p>
-                        <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
-                        {clubScheduleDays
-                          .filter((d) => d.club_id === club.id && d.day_of_week != null)
-                          .map((d) => (typeof d.day_of_week === 'number' && d.day_of_week >= 1 && d.day_of_week <= 5
-                            ? ['Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан'][d.day_of_week - 1]
-                            : d.day_of_week))
-                          .join(', ')}
-                      </p>
-                    )}
-                  </div>
-                )}
+                    )
+                  })()}
+                </div>
               </div>
 
               {/* Join club button */}
@@ -383,6 +445,27 @@ function ClubDetailPage({ clubId, user, onBack, onGoToLogin }) {
           onSaved={loadClubData}
         />
       )}
+
+      <ConfirmModal
+        open={showDeleteConfirm}
+        title="Клубыг устгах уу?"
+        message={club ? `"${club.name}" клубыг бүрмөсөн устгана. Энэ үйлдлийг буцааж болохгүй.` : ''}
+        confirmLabel="Устгах"
+        cancelLabel="Цуцлах"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
+
+      <ConfirmModal
+        open={showExitEditConfirm}
+        title="Өөрчлөлтийг хадгалах уу?"
+        message="Хадгалах дарвал одоогийн өөрчлөлтүүд хадгалагдана. Цуцлах дарвал засах горимоос гарна."
+        confirmLabel="Хадгалах"
+        cancelLabel="Цуцлах"
+        onConfirm={handleConfirmSaveAndExit}
+        onCancel={handleConfirmDiscardExit}
+      />
     </div>
   )
 }

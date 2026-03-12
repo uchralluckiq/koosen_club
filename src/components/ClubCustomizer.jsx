@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { clubService, CLUB_TYPE_LABELS } from '../services/clubService'
-import { clubScheduleDays } from '../assets/mockdata/clubsInfo/clubScheduleDay'
-import { clubScheduleTimes } from '../assets/mockdata/clubsInfo/clubScheduleTime'
+import { clubScheduleDays } from '../mockdata/clubsInfo/clubScheduleDay'
+import { clubScheduleTimes } from '../mockdata/clubsInfo/clubScheduleTime'
+import { logTable } from '../utils/devLog'
 
 const SCHEDULE_DAYS = ['Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан']
 
@@ -35,6 +36,7 @@ function ClubCustomizer({ club, onUpdate, onClose, onSaved }) {
       prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
     )
   }
+  // used in: schedule day buttons (Даваа, Мягмар, ...)
 
   const handleSave = async () => {
     setSaving(true)
@@ -52,6 +54,7 @@ function ClubCustomizer({ club, onUpdate, onClose, onSaved }) {
       }))
       clubScheduleDays.length = 0
       clubScheduleDays.push(...oldDays, ...newDays)
+      logTable('clubScheduleDays', clubScheduleDays)
       const timeRow = clubScheduleTimes.find((t) => t.club_id === club.id)
       const st = startTime || null
       const et = endTime || null
@@ -61,6 +64,7 @@ function ClubCustomizer({ club, onUpdate, onClose, onSaved }) {
       } else {
         clubScheduleTimes.push({ club_id: club.id, start_time: st, end_time: et })
       }
+      logTable('clubScheduleTimes', clubScheduleTimes)
       onUpdate?.(updated)
       onSaved?.()
       onClose?.()
@@ -70,6 +74,7 @@ function ClubCustomizer({ club, onUpdate, onClose, onSaved }) {
       setSaving(false)
     }
   }
+  // used in: Хадгалах button
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

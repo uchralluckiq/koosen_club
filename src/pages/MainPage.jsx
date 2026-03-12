@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import ClubSearchPage from '../mainPageComponents/ClubSearchPage'
 import ClubDetailPage from '../mainPageComponents/ClubDetailPage'
 import TimeSchedulePage from '../mainPageComponents/TimeSchedulePage'
+import CreateClub from '../mainPageComponents/CreateClub'
+import FeedbackPage from '../mainPageComponents/FeedbackPage'
 import { siteAssetService } from '../services/siteAssetService'
 
 function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
@@ -16,17 +18,21 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
   }, [])
 
   const closeMenu = () => setMenuOpen(false)
+  // used in: nav overlay, nav buttons, login button, hamburger close
   const closeAccountPanel = () => setAccountPanelOpen(false)
+  // used in: account overlay, account close button, logout button
 
   const handleClubSelect = (club) => {
     setSelectedClubId(club.id)
     setSecondaryPage('clubDetail')
   }
+  // used in: ClubSearchPage (onClubSelect prop)
 
   const handleBackFromClubDetail = () => {
     setSelectedClubId(null)
     setSecondaryPage('clubs')
   }
+  // used in: ClubDetailPage (onBack prop)
 
   const NavLinks = (
     <>
@@ -68,6 +74,34 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
       >
         Цагийн хуваарь
       </button>
+      <button
+        type="button"
+        onClick={() => {
+          setSecondaryPage('createClub')
+          closeMenu()
+        }}
+        className={`rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-colors border-2 ${
+          secondaryPage === 'createClub'
+            ? 'text-button-primary border-button-primary/70 bg-button-primary/15'
+            : 'border-transparent text-text-paragraph hover:border-border-default hover:bg-input-background hover:text-text-heading'
+        }`}
+      >
+        Клуб нээх
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          setSecondaryPage('feedback')
+          closeMenu()
+        }}
+        className={`rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-colors ${
+          secondaryPage === 'feedback'
+            ? 'text-text-label bg-nav-active'
+            : 'text-text-paragraph hover:bg-input-background hover:text-text-heading'
+        }`}
+      >
+        Санал хүсэлт
+      </button>
     </>
   )
 
@@ -100,7 +134,6 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
 
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-main-background">
-      {/* Mobile menu overlay – on top when open */}
       {menuOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity duration-300"
@@ -109,7 +142,6 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         />
       )}
 
-      {/* Mobile slide-in menu – fixed on top, slides from right; hidden on desktop */}
       <nav
         className={`
           fixed top-0 right-0
@@ -141,7 +173,6 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         {loginButton}
       </nav>
 
-      {/* Account panel overlay */}
       {accountPanelOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
@@ -150,7 +181,6 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         />
       )}
 
-      {/* Account panel – slides down from top */}
       <div
         className={`
           fixed top-0 left-0 right-0
@@ -206,9 +236,6 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         </div>
       </div>
 
-      {/* ==================================================================================== */}
-      {/* Top navbar bar (logo + center nav + login right + hamburger) */}
-      {/* ==================================================================================== */}
       <header className="sticky top-0 z-30 shrink-0 border-b border-border-default bg-nav-background/95 backdrop-blur-sm">
         <div className="flex h-14 items-center w-full px-4 sm:px-6">
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -216,20 +243,16 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
             <span className="text-sm sm:text-lg font-semibold text-text-heading">Kosen Club</span>
           </div>
 
-          {/* Mobile: spacer to push menu button to the right */}
           <div className="flex-1 md:hidden" aria-hidden="true" />
 
-          {/* Desktop: center nav */}
           <nav className="hidden md:flex flex-1 justify-center items-center gap-1">
             {NavLinks}
           </nav>
 
-          {/* Desktop: login on the right */}
           <div className="hidden md:flex items-center flex-shrink-0 ml-auto">
             {loginButton}
           </div>
 
-          {/* Mobile menu button – right side */}
           <button
             type="button"
             onClick={() => setMenuOpen((o) => !o)}
@@ -243,7 +266,6 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
         </div>
       </header>
 
-      {/* Main section – no overflow here; only the inner grid scrolls (ClubSearchPage) */}
       <main className="flex-1 flex flex-col min-w-0 min-h-0">
         {secondaryPage === 'clubs' && (
           <ClubSearchPage 
@@ -261,6 +283,12 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
           />
         )}
         {secondaryPage === 'schedule' && <TimeSchedulePage />}
+        {secondaryPage === 'createClub' && (
+          <CreateClub user={user} onGoToLogin={onGoToLogin} />
+        )}
+        {secondaryPage === 'feedback' && (
+          <FeedbackPage user={user} onGoToLogin={onGoToLogin} />
+        )}
       </main>
     </div>
   )

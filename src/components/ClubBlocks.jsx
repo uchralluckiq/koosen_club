@@ -3,7 +3,8 @@ import {
   CLUB_TYPE_LABELS,
   clubService,
 } from '../services/clubService'
-import { clubScheduleDays } from '../assets/mockdata/clubsInfo/clubScheduleDay'
+import { clubScheduleDays } from '../mockdata/clubsInfo/clubScheduleDay'
+import { clubScheduleTimes } from '../mockdata/clubsInfo/clubScheduleTime'
 
 function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
   const canJoin = clubService.canJoinClub(club, user)
@@ -14,6 +15,7 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
     type,
     maximum_member,
     main_media_url,
+    room_id,
     // enriched by clubService
     memberCount = 0,
     engineerClasses = [],
@@ -86,49 +88,50 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
             {engineerLabels.join(', ')}
           </p>
         )}
-        {(schedules.length > 0 || scheduleDaysForClub.length > 0 || (whatDayOfWeek?.length > 0 || fromWhatTime)) && (
-          <div className="text-[10px] sm:text-xs text-text-muted space-y-0.5">
-            {schedules.length > 0 ? (
-              <>
-                <p>
-                  <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
-                  {[...new Set(schedules.map((s) => s.day_of_week))]
-                    .sort((a, b) => (a ?? 0) - (b ?? 0))
-                    .map((d) => (typeof d === 'number' && d >= 1 && d <= 5 ? DAYS_MN[d - 1] : d))
-                    .join(', ')}
-                </p>
-                {(schedules[0]?.start_time || schedules[0]?.end_time) && (
-                  <p>
-                    <span className="font-semibold text-text-label">Хичээллэх цаг:</span>{' '}
-                    {schedules[0].start_time || '–'}–{schedules[0].end_time || '–'}
-                  </p>
-                )}
-              </>
-            ) : scheduleDaysForClub.length > 0 ? (
-              <>
-                <p>
-                  <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
-                  {scheduleDaysForClub.join(', ')}
-                </p>
-              </>
-            ) : (
-              <>
-                {whatDayOfWeek?.length > 0 && (
-                  <p>
-                    <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
-                    {whatDayOfWeek.join(', ')}
-                  </p>
-                )}
-                {(fromWhatTime || untilWhatTime) && (
-                  <p>
-                    <span className="font-semibold text-text-label">Хичээллэх цаг:</span>{' '}
-                    {formatTime(fromWhatTime)}–{formatTime(untilWhatTime)}
-                  </p>
-                )}
-              </>
-            )}
-          </div>
+        {room_id && (
+          <p className="text-[10px] sm:text-xs text-text-muted">
+            <span className="font-semibold text-text-label">Өрөө:</span>{' '}
+            {room_id}
+          </p>
         )}
+        <div className="text-[10px] sm:text-xs text-text-muted space-y-0.5">
+          {(() => {
+            const daysFromSchedules = schedules.length > 0
+              ? [...new Set(schedules.map((s) => s.day_of_week))].filter((d) => d != null).sort((a, b) => (a ?? 0) - (b ?? 0))
+              : []
+            const hasDaysFromSchedules = daysFromSchedules.length > 0
+            const hasDaysFromClub = scheduleDaysForClub.length > 0
+            const hasDaysFromLegacy = whatDayOfWeek?.length > 0
+            const hasDays = hasDaysFromSchedules || hasDaysFromClub || hasDaysFromLegacy
+            const dayLabels = hasDays
+              ? (hasDaysFromSchedules
+                  ? daysFromSchedules.map((d) => (typeof d === 'number' && d >= 1 && d <= 5 ? DAYS_MN[d - 1] : d))
+                  : hasDaysFromClub
+                    ? scheduleDaysForClub
+                    : whatDayOfWeek
+                ).join(', ')
+              : 'тогтсон өдөр байхгүй'
+            const timeFromSchedules = schedules[0]
+            const timeFromTimes = club?.id ? clubScheduleTimes.find((t) => t.club_id === club.id) : null
+            const startTime = timeFromSchedules?.start_time ?? timeFromTimes?.start_time ?? (fromWhatTime != null ? formatTime(fromWhatTime) : null)
+            const endTime = timeFromSchedules?.end_time ?? timeFromTimes?.end_time ?? (untilWhatTime != null ? formatTime(untilWhatTime) : null)
+            const noTime = (v) => v == null || v === '' || v === '–'
+            const hasTime = !noTime(startTime) || !noTime(endTime)
+            const timeText = hasTime ? `${startTime ?? '–'}–${endTime ?? '–'}` : 'тогтсон цаг байхгүй'
+            return (
+              <>
+                <p>
+                  <span className="font-semibold text-text-label">Хичээллэх өдөр:</span>{' '}
+                  {dayLabels}
+                </p>
+                <p>
+                  <span className="font-semibold text-text-label">Хичээллэх цаг:</span>{' '}
+                  {timeText}
+                </p>
+              </>
+            )
+          })()}
+        </div>
       </div>
       <div className="mt-4 flex gap-2">
         <button
@@ -165,5 +168,6 @@ function formatTime(arr) {
   const [hour, minute] = arr
   return `${hour}:${String(minute ?? 0).padStart(2, '0')}`
 }
+// used in: ClubBlocks (schedule fromWhatTime/untilWhatTime display)
 
 export default ClubBlocks

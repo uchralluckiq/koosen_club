@@ -1,11 +1,15 @@
-import { clubs } from "../assets/mockdata/clubsInfo/clubs";
-import { clubMembers } from "../assets/mockdata/clubsInfo/clubMembers";
-import { clubAllowedEngineerClasses } from "../assets/mockdata/clubsInfo/clubAllowedEngineerClasses";
-import { clubAllowedCollegeYears } from "../assets/mockdata/clubsInfo/clubAllowedCollegeYears";
-import { clubSchedules } from "../assets/mockdata/clubsInfo/clubSchedules";
-import { clubJoinRequests } from "../assets/mockdata/clubsInfo/clubJoinRequests";
+import { clubs } from "../mockdata/clubsInfo/clubs";
+import { clubMembers } from "../mockdata/clubsInfo/clubMembers";
+import { clubAllowedEngineerClasses } from "../mockdata/clubsInfo/clubAllowedEngineerClasses";
+import { clubAllowedCollegeYears } from "../mockdata/clubsInfo/clubAllowedCollegeYears";
+import { clubSchedules } from "../mockdata/clubsInfo/clubSchedules";
+import { clubJoinRequests } from "../mockdata/clubsInfo/clubJoinRequests";
+import { clubScheduleDays } from "../mockdata/clubsInfo/clubScheduleDay";
+import { clubScheduleTimes } from "../mockdata/clubsInfo/clubScheduleTime";
+import { clubTextBlocks } from "../mockdata/clubsInfo/clubTextBlocks";
+import { logTable } from "../utils/devLog";
 
-const USE_BACKEND = false;
+const USE_BACKEND = true;
 const API_BASE_URL = "/api";
 
 const delay = (data, ms = 300) =>
@@ -23,6 +27,12 @@ export const clubService = {
    * Clubs include main_media_url from mockdata when set.
    */
   getAll: async () => {
+    if (USE_BACKEND) {
+      const response = await fetch(`${API_BASE_URL}/clubs`);
+      if (!response.ok) throw new Error("Failed to fetch clubs");
+      return response.json();
+    }
+
     const enriched = clubs.map((club) => {
       const memberCount = clubMembers.filter((m) => m.club_id === club.id).length;
       const engineerClasses = clubAllowedEngineerClasses
@@ -52,6 +62,16 @@ export const clubService = {
 
   getById: async (id) => {
     if (id == null) return delay(undefined);
+
+    if (USE_BACKEND) {
+      const response = await fetch(`${API_BASE_URL}/clubs/${id}`);
+      if (!response.ok) {
+        if (response.status === 404) return undefined;
+        throw new Error("Failed to fetch club");
+      }
+      return response.json();
+    }
+
     const club = clubs.find((c) => c.id === id);
     if (!club) return delay(undefined);
     const memberCount = clubMembers.filter((m) => m.club_id === club.id).length;
@@ -98,6 +118,45 @@ export const clubService = {
     };
 
     clubs.push(newClub);
+    logTable("clubs", clubs);
+    return delay({ ...newClub });
+  },
+
+  /**
+   * Create a club with placeholder rows and set the given user as leader (e.g. admin direct create).
+   */
+  createClubWithPlaceholders: async (clubData, leaderId) => {
+    if (USE_BACKEND) {
+      const response = await fetch(`${API_BASE_URL}/clubs/create-with-leader`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...clubData, leaderId }),
+      });
+      if (!response.ok) throw new Error("Failed to create club");
+      return response.json();
+    }
+
+    const newClub = {
+      id: nextClubId++,
+      type: clubData.type || "education",
+      name: clubData.name || "Шинэ клуб",
+      maximum_member: clubData.maximum_member ?? 20,
+      main_media_url: null,
+      room_id: null,
+    };
+    clubs.push(newClub);
+    clubMembers.push({ club_id: newClub.id, student_id: leaderId, role: 1 });
+    clubAllowedCollegeYears.push({ club_id: newClub.id, college_year: "Бүх курс" });
+    clubAllowedEngineerClasses.push({ club_id: newClub.id, engineer_class: "Бүх бүлэг" });
+    clubScheduleDays.push({ club_id: newClub.id, day_of_week: null });
+    clubScheduleTimes.push({ club_id: newClub.id, start_time: null, end_time: null });
+
+    logTable("clubs", clubs);
+    logTable("clubMembers", clubMembers);
+    logTable("clubAllowedCollegeYears", clubAllowedCollegeYears);
+    logTable("clubAllowedEngineerClasses", clubAllowedEngineerClasses);
+    logTable("clubScheduleDays", clubScheduleDays);
+    logTable("clubScheduleTimes", clubScheduleTimes);
     return delay({ ...newClub });
   },
 
@@ -116,6 +175,7 @@ export const clubService = {
     if (index === -1) throw new Error("Club not found");
 
     clubs[index] = { ...clubs[index], ...updates };
+    logTable("clubs", clubs);
     return delay({ ...clubs[index] });
   },
 
@@ -132,6 +192,36 @@ export const clubService = {
     if (index === -1) throw new Error("Club not found");
 
     clubs.splice(index, 1);
+    for (let i = clubMembers.length - 1; i >= 0; i--) {
+      if (clubMembers[i].club_id === id) clubMembers.splice(i, 1);
+    }
+    for (let i = clubAllowedCollegeYears.length - 1; i >= 0; i--) {
+      if (clubAllowedCollegeYears[i].club_id === id) clubAllowedCollegeYears.splice(i, 1);
+    }
+    for (let i = clubAllowedEngineerClasses.length - 1; i >= 0; i--) {
+      if (clubAllowedEngineerClasses[i].club_id === id) clubAllowedEngineerClasses.splice(i, 1);
+    }
+    for (let i = clubJoinRequests.length - 1; i >= 0; i--) {
+      if (clubJoinRequests[i].club_id === id) clubJoinRequests.splice(i, 1);
+    }
+    for (let i = clubScheduleDays.length - 1; i >= 0; i--) {
+      if (clubScheduleDays[i].club_id === id) clubScheduleDays.splice(i, 1);
+    }
+    for (let i = clubScheduleTimes.length - 1; i >= 0; i--) {
+      if (clubScheduleTimes[i].club_id === id) clubScheduleTimes.splice(i, 1);
+    }
+    for (let i = clubTextBlocks.length - 1; i >= 0; i--) {
+      if (clubTextBlocks[i].club_id === id) clubTextBlocks.splice(i, 1);
+    }
+
+    logTable("clubs", clubs);
+    logTable("clubMembers", clubMembers);
+    logTable("clubAllowedCollegeYears", clubAllowedCollegeYears);
+    logTable("clubAllowedEngineerClasses", clubAllowedEngineerClasses);
+    logTable("clubJoinRequests", clubJoinRequests);
+    logTable("clubScheduleDays", clubScheduleDays);
+    logTable("clubScheduleTimes", clubScheduleTimes);
+    logTable("clubTextBlocks", clubTextBlocks);
     return delay({ success: true });
   },
 
@@ -140,6 +230,11 @@ export const clubService = {
     if (user.role === 1) return true; // 1: admin
     if (clubService.isLeader(club, user.id)) return true;
     return false;
+  },
+
+  canDeleteClub: (club, user) => {
+    if (!user || !club) return false;
+    return user.role === 1; // only admin can delete
   },
 
   isMember: (clubId, userId) => {
@@ -189,6 +284,7 @@ export const clubService = {
     }
 
     clubMembers.push({ club_id: clubId, student_id: userId, role: 2 }); // 2: member
+    logTable("clubMembers", clubMembers);
     return delay({ success: true });
   },
 
@@ -218,6 +314,7 @@ export const clubService = {
     if (index === -1) throw new Error("Member not found");
 
     clubMembers.splice(index, 1);
+    logTable("clubMembers", clubMembers);
     return delay({ success: true });
   },
 };

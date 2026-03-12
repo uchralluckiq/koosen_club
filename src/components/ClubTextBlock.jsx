@@ -14,6 +14,7 @@ function ClubTextBlock({ block, isEditing, onUpdate, onDelete }) {
       media_type: localMediaUrl ? localMediaType : null,
     })
   }
+  // used in: Хадгалах button (edit mode)
 
   const renderMedia = () => {
     if (!block.media_url) return null
@@ -36,6 +37,7 @@ function ClubTextBlock({ block, isEditing, onUpdate, onDelete }) {
       />
     )
   }
+  // used in: view mode (block display)
 
   if (isEditing) {
     return (

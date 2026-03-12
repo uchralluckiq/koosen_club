@@ -22,12 +22,14 @@ function App() {
     setUser(loggedInUser)
     setPage('main')
   }
+  // used in: LoginPage (onLogin prop)
 
   const handleLogout = () => {
     authService.logout()
     setUser(null)
     setPage('login')
   }
+  // used in: MainPage (onLogout prop)
 
   if (loading) {
     return (

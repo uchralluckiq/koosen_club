@@ -1,4 +1,4 @@
-import { siteAssets } from '../assets/mockdata/siteAssets'
+import { siteAssets } from '../mockdata/siteAssets'
 
 const USE_BACKEND = false
 const API_BASE_URL = '/api'

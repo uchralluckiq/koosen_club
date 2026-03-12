@@ -1,6 +1,7 @@
-import { clubTextBlocks } from '../assets/mockdata/clubsInfo/clubTextBlocks'
+import { clubTextBlocks } from '../mockdata/clubsInfo/clubTextBlocks'
+import { logTable } from '../utils/devLog'
 
-const USE_BACKEND = false
+const USE_BACKEND = true
 const API_BASE_URL = '/api'
 
 const delay = (data, ms = 300) =>
@@ -49,6 +50,7 @@ export const clubTextBlockService = {
     }
 
     clubTextBlocks.push(newBlock)
+    logTable('clubTextBlocks', clubTextBlocks)
     return delay({ ...newBlock })
   },
 
@@ -67,6 +69,7 @@ export const clubTextBlockService = {
     if (index === -1) throw new Error('Text block not found')
 
     clubTextBlocks[index] = { ...clubTextBlocks[index], ...updates }
+    logTable('clubTextBlocks', clubTextBlocks)
     return delay({ ...clubTextBlocks[index] })
   },
 
@@ -83,6 +86,7 @@ export const clubTextBlockService = {
     if (index === -1) throw new Error('Text block not found')
 
     clubTextBlocks.splice(index, 1)
+    logTable('clubTextBlocks', clubTextBlocks)
     return delay({ success: true })
   },
 
@@ -101,7 +105,7 @@ export const clubTextBlockService = {
       const block = clubTextBlocks.find((b) => b.id === id)
       if (block) block.order_index = index + 1
     })
-
+    logTable('clubTextBlocks', clubTextBlocks)
     return delay({ success: true })
   },
 }

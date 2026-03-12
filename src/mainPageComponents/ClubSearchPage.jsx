@@ -20,6 +20,7 @@ function ClubSearchPage({ onClubSelect, user, onGoToLogin }) {
     setClubs(data ?? [])
     setLoading(false)
   }
+  // used in: useEffect (initial load), handleJoinClick (after send)
 
   const handleJoinClick = async (club) => {
     if (!user) {
@@ -36,6 +37,7 @@ function ClubSearchPage({ onClubSelect, user, onGoToLogin }) {
       console.error('Failed to send join request:', err)
     }
   }
+  // used in: ClubBlocks (onJoinClick prop)
 
   useEffect(() => {
     loadClubs()
@@ -51,7 +53,7 @@ function ClubSearchPage({ onClubSelect, user, onGoToLogin }) {
       if (!matchYear) return false
     }
     if (filters.class) {
-      const engineerClass = filters.class // "1", "2", ...
+      const engineerClass = filters.class
       const matchClass = club.engineerClasses?.some(
         (c) => c === 'Бүх бүлэг' || String(c) === engineerClass || Number(c) === Number(engineerClass)
       )
@@ -62,7 +64,6 @@ function ClubSearchPage({ onClubSelect, user, onGoToLogin }) {
 
   return (
     <div className="flex-1 min-h-0 flex flex-col relative">
-      {/* Request sent notification */}
       {requestSent && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm bg-button-green text-button-green-text font-medium shadow-lg animate-fade-in">
           Хүсэлт амжилттай илгээгдлээ!

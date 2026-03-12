@@ -1,7 +1,8 @@
-import { clubJoinRequests } from '../assets/mockdata/clubsInfo/clubJoinRequests'
-import { clubMembers } from '../assets/mockdata/clubsInfo/clubMembers'
+import { clubJoinRequests } from '../mockdata/clubsInfo/clubJoinRequests'
+import { clubMembers } from '../mockdata/clubsInfo/clubMembers'
+import { logTable } from '../utils/devLog'
 
-const USE_BACKEND = false
+const USE_BACKEND = true
 const API_BASE_URL = '/api'
 
 const delay = (data, ms = 300) =>
@@ -68,6 +69,7 @@ export const clubJoinRequestService = {
     }
 
     clubJoinRequests.push(newRequest)
+    logTable('clubJoinRequests', clubJoinRequests)
     return delay({ ...newRequest })
   },
 
@@ -93,6 +95,8 @@ export const clubJoinRequestService = {
       student_id: request.student_id,
       role: 2, // 2: member
     })
+    logTable('clubJoinRequests', clubJoinRequests)
+    logTable('clubMembers', clubMembers)
 
     return delay({ ...request })
   },
@@ -113,6 +117,7 @@ export const clubJoinRequestService = {
 
     request.status = 3 // 3: rejected
     request.reviewed_by = reviewerId
+    logTable('clubJoinRequests', clubJoinRequests)
 
     return delay({ ...request })
   },

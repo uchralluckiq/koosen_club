@@ -1,5 +1,5 @@
-import { clubScheduleDays } from "./clubScheduleDay";
-import { clubScheduleTimes } from "./clubScheduleTime";
+import { clubScheduleDays } from "./clubScheduleDay.js";
+import { clubScheduleTimes } from "./clubScheduleTime.js";
 
 export const clubSchedules = clubScheduleDays
   .filter((d) => d.day_of_week != null)

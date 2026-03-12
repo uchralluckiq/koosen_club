@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { rooms } from '../assets/mockdata/rooms'
+import { rooms } from '../mockdata/rooms'
 import { clubService } from '../services/clubService'
 
 function ClubRoomManager({ club, onRoomChange }) {
@@ -20,6 +20,7 @@ function ClubRoomManager({ club, onRoomChange }) {
       setSaving(null)
     }
   }
+  // used in: room list buttons (Боломжтой өрөөнүүд)
 
   return (
     <div className="space-y-6">

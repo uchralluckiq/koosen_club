@@ -1,4 +1,4 @@
-import { users } from '../assets/mockdata/users'
+import { users } from '../mockdata/users'
 
 const AUTH_STORAGE_KEY = 'koosen_auth_user'
 
