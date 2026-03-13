@@ -8,9 +8,15 @@ import {
   PERIOD_COUNT,
 } from '../utils/scheduleGenerator'
 
-function SubjectSchedules() {
+function SubjectSchedules({ user }) {
   const [subjectSchedules, setSubjectSchedules] = useState([])
   const [scheduleKey, setScheduleKey] = useState(0)
+  const [manualEdit, setManualEdit] = useState(false)
+  const [showImportPanel, setShowImportPanel] = useState(false)
+  const [importing, setImporting] = useState(false)
+  const [importMessage, setImportMessage] = useState('')
+
+  const isAdmin = user?.role === 'admin'
 
   useEffect(() => {
     setSubjectSchedules(initialSubjectSchedules.map((s) => ({ ...s })))
@@ -31,6 +37,7 @@ function SubjectSchedules() {
   )
 
   const fixSlot = (classId, dayIdx, period, cell) => {
+    if (!isAdmin || !manualEdit) return
     if (!cell || cell.fixed) return
     const dayOfWeek = dayIdx + 1
     const existingFixed = subjectSchedules.find(
@@ -74,6 +81,7 @@ function SubjectSchedules() {
   // used in: table cell CellContent (onFix)
 
   const submitSchedule = () => {
+    if (!isAdmin || !manualEdit) return
     const nextSchedules = []
     let id = 1
     for (const classId of classIds) {
@@ -106,6 +114,36 @@ function SubjectSchedules() {
   }
   // used in: table header (class column labels)
 
+  const handleExcelImportChange = async (event) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+    setImporting(true)
+    setImportMessage('')
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await fetch('/api/schedule/import-excel', {
+        method: 'POST',
+        body: formData,
+      })
+      if (!res.ok) {
+        throw new Error('Импорт амжилтгүй боллоо')
+      }
+      const data = await res.json()
+      setImportMessage(
+        `Импорт амжилттай: ${data.inserted_rows ?? 0} мөр, алгассан: ${
+          data.skipped_rows ?? 0
+        }`
+      )
+    } catch (err) {
+      console.error(err)
+      setImportMessage('Excel файлаас хуваарь унших үед алдаа гарлаа.')
+    } finally {
+      setImporting(false)
+      event.target.value = ''
+    }
+  }
+
   return (
     <div className="space-y-4">
       {!distribution.ok && distribution.issues?.length > 0 && (
@@ -114,6 +152,50 @@ function SubjectSchedules() {
           Зарим хичээл өдрүүд дээр тархаагүй байна.
         </div>
       )}
+      {isAdmin && (
+        <div className="flex flex-wrap gap-2 items-center">
+          <button
+            type="button"
+            onClick={() => setShowImportPanel((v) => !v)}
+            className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-button-primary-subtle text-button-primary-text hover:bg-button-primary-hover-subtle transition-colors"
+          >
+            Хуваарь засах
+          </button>
+          {showImportPanel && (
+            <div className="flex flex-wrap gap-3 items-center text-[10px] sm:text-xs text-text-muted">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <span className="px-2 py-1 rounded-lg border border-border-default bg-input-background hover:bg-block-background-filter transition-colors">
+                  Excel-ээр импортлох
+                </span>
+                <input
+                  type="file"
+                  accept=".xlsx,.xls"
+                  className="hidden"
+                  onChange={handleExcelImportChange}
+                  disabled={importing}
+                />
+              </label>
+              <button
+                type="button"
+                onClick={() => setManualEdit((v) => !v)}
+                className={`px-2 py-1 rounded-lg border text-xs sm:text-xs transition-colors ${
+                  manualEdit
+                    ? 'border-button-green text-button-green-text bg-button-green/20'
+                    : 'border-border-default text-text-muted hover:bg-block-background-filter'
+                }`}
+              >
+                Гараар засах
+              </button>
+              {importMessage && (
+                <span className="text-[10px] sm:text-xs text-text-muted">
+                  {importMessage}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="max-h-[70vh] overflow-auto rounded-2xl border border-border-default bg-block-background-muted">
         <table className="w-full min-w-[600px] border-collapse text-xs sm:text-sm">
           <thead>
@@ -157,6 +239,7 @@ function SubjectSchedules() {
                     >
                       <CellContent
                         cell={row.cells[cid]}
+                        canEdit={isAdmin && manualEdit}
                         onFix={() => fixSlot(cid, dayIdx, row.period, row.cells[cid])}
                       />
                     </td>
@@ -167,23 +250,41 @@ function SubjectSchedules() {
           </tbody>
         </table>
       </div>
-      <p className="text-[10px] sm:text-xs text-text-muted">
-        Тогтсон эсэхийг өөрчлөхийн тулд нүд дээр дарна уу. Сайн болсон бол &quot;Хадгалах&quot; дарна уу.
-      </p>
-      <button
-        type="button"
-        onClick={submitSchedule}
-        className="px-4 py-2 rounded-xl bg-button-green text-button-green-text text-sm font-medium hover:bg-button-green-hover transition-colors"
-      >
-        Хадгалах (бүгдийг тогтоох)
-      </button>
+      {isAdmin && (
+        <>
+          <p className="text-[10px] sm:text-xs text-text-muted">
+            {manualEdit
+              ? 'Тогтсон эсэхийг өөрчлөхийн тулд нүд дээр дарна уу. Сайн болсон бол "Хадгалах" дарна уу.'
+              : 'Гараар засахаар бол "Гараар засах" товчийг дарна уу.'}
+          </p>
+          <button
+            type="button"
+            onClick={submitSchedule}
+            disabled={!manualEdit}
+            className="px-4 py-2 rounded-xl bg-button-green text-button-green-text text-sm font-medium hover:bg-button-green-hover transition-colors disabled:opacity-50"
+          >
+            Хадгалах (бүгдийг тогтоох)
+          </button>
+        </>
+      )}
     </div>
   )
 }
 
-function CellContent({ cell, onFix }) {
+function CellContent({ cell, canEdit, onFix }) {
   if (!cell) {
     return <span className="text-text-muted">—</span>
+  }
+  if (!canEdit) {
+    return (
+      <div className="w-full text-left p-1 rounded-lg">
+        <span className="font-medium text-text-heading block">{cell.subject_name}</span>
+        <span className="text-[10px] sm:text-xs text-text-muted">
+          {cell.teacher_id}
+          {cell.room ? ` · ${cell.room}` : ''}
+        </span>
+      </div>
+    )
   }
   return (
     <button

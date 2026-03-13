@@ -5,7 +5,7 @@ import ClubSchedules from '../components/ClubSchedules'
 const TAB_SCHOOL = 'school'
 const TAB_CLUB = 'club'
 
-function TimeSchedulePage() {
+function TimeSchedulePage({ user }) {
   const [activeTab, setActiveTab] = useState(TAB_SCHOOL)
 
   return (
@@ -39,7 +39,7 @@ function TimeSchedulePage() {
         </button>
       </div>
 
-      {activeTab === TAB_SCHOOL && <SubjectSchedules />}
+      {activeTab === TAB_SCHOOL && <SubjectSchedules user={user} />}
       {activeTab === TAB_CLUB && <ClubSchedules />}
     </div>
   )

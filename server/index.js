@@ -253,6 +253,7 @@ app.post(`${API_BASE}/clubs/:clubId/join-requests`, (req, res) => {
   res.status(201).json(newRequest);
 });
 
+
 app.post(`${API_BASE}/join-requests/:requestId/approve`, (req, res) => {
   const requestId = Number(req.params.requestId);
   const { reviewerId } = req.body || {};

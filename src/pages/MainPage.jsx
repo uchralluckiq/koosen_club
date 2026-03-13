@@ -282,7 +282,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
             onGoToLogin={onGoToLogin}
           />
         )}
-        {secondaryPage === 'schedule' && <TimeSchedulePage />}
+        {secondaryPage === 'schedule' && <TimeSchedulePage user={user} />}
         {secondaryPage === 'createClub' && (
           <CreateClub user={user} onGoToLogin={onGoToLogin} />
         )}
