@@ -2,7 +2,7 @@ import { clubJoinRequests } from '../mockdata/clubsInfo/clubJoinRequests'
 import { clubMembers } from '../mockdata/clubsInfo/clubMembers'
 import { logTable } from '../utils/devLog'
 
-const USE_BACKEND = true
+const USE_BACKEND = false
 const API_BASE_URL = '/api'
 
 const delay = (data, ms = 300) =>

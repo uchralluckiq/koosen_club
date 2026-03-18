@@ -23,7 +23,6 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
     schedules = [],
     // legacy / optional
     image,
-    goal,
     memberIds,
     whatDayOfWeek,
     fromWhatTime,
@@ -69,12 +68,6 @@ function ClubBlocks({ club, user, onSeeMore, onJoinClick }) {
           <span className="text-[10px] sm:text-xs font-medium text-badge-type-text bg-badge-type-bg px-1.5 py-0.5 rounded-lg w-fit">
             {typeLabel}
           </span>
-        )}
-        {goal && (
-          <p className="text-[10px] sm:text-xs text-text-paragraph">
-            <span className="font-semibold text-text-label">Зорилго:</span>{' '}
-            {goal}
-          </p>
         )}
         {collegeYears.length > 0 && (
           <p className="text-[10px] sm:text-xs text-text-muted">

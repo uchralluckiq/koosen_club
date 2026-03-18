@@ -238,7 +238,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
 
       <header className="sticky top-0 z-30 shrink-0 border-b border-border-default bg-nav-background/95 backdrop-blur-sm">
         <div className="flex h-14 items-center w-full px-4 sm:px-6">
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2">
             {logoUrl && <img src={logoUrl} alt="" className="h-5 sm:h-6 w-auto" aria-hidden="true" />}
             <span className="text-sm sm:text-lg font-semibold text-text-heading">Kosen Club</span>
           </div>
@@ -249,7 +249,7 @@ function MainPage({ onGoToHome, onGoToLogin, user, onLogout }) {
             {NavLinks}
           </nav>
 
-          <div className="hidden md:flex items-center flex-shrink-0 ml-auto">
+          <div className="hidden md:flex items-center ml-auto">
             {loginButton}
           </div>
 

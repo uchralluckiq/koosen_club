@@ -1,7 +1,7 @@
 import { clubTextBlocks } from '../mockdata/clubsInfo/clubTextBlocks'
 import { logTable } from '../utils/devLog'
 
-const USE_BACKEND = true
+const USE_BACKEND = false
 const API_BASE_URL = '/api'
 
 const delay = (data, ms = 300) =>

@@ -241,7 +241,7 @@ function FeedbackPage({ user, onGoToLogin }) {
 
       {selectedFeedback && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50"
+          className="fixed inset-0 z-\[100\] flex items-center justify-center p-4 bg-black/50"
           role="dialog"
           aria-modal="true"
           aria-labelledby="feedback-detail-title"
